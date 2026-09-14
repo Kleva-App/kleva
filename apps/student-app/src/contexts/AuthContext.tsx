@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { authBaseURL, authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { api } from "@/lib/api";
 
 export type AccountRole = "student" | "parent" | "institution";
@@ -35,21 +35,17 @@ async function ensureRole(role: AccountRole) {
   throw new Error("Account created, but access could not be set.");
 }
 
-function authErrorMessage(payload: unknown, fallback: string) {
-  if (!payload || typeof payload !== "object") return fallback;
-  const record = payload as { message?: unknown; error?: unknown };
-  if (typeof record.message === "string" && record.message) return record.message;
-  if (typeof record.error === "string" && record.error) return record.error;
-  return fallback;
-}
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient();
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session, isPending, refetch } = authClient.useSession();
 
   const signIn = async (email: string, password: string) => {
     const { error } = await authClient.signIn.email({ email, password });
-    return { error: error ? new Error(error.message || "Sign in failed") : null };
+    if (error) {
+      return { error: new Error(error.message || "Sign in failed") };
+    }
+    await refetch();
+    return { error: null };
   };
 
   const signUp = async (
@@ -58,32 +54,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     fullName: string,
     role: AccountRole = "student",
   ) => {
-    const url = `${authBaseURL}/api/auth/sign-up/email?role=${encodeURIComponent(role)}`;
-    const response = await fetch(url, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        "x-kleva-role": role,
+    const { error, data } = await authClient.signUp.email({
+      email,
+      password,
+      name: fullName,
+      fetchOptions: {
+        headers: {
+          "x-kleva-role": role,
+        },
+        query: {
+          role,
+        },
       },
-      body: JSON.stringify({
-        email,
-        password,
-        name: fullName,
-      }),
     });
 
-    if (!response.ok) {
-      let payload: unknown = null;
-      try {
-        payload = await response.json();
-      } catch {
-        payload = null;
-      }
-      return { error: new Error(authErrorMessage(payload, "Sign up failed")) };
+    if (error) {
+      return { error: new Error(error.message || "Sign up failed") };
     }
 
-    await authClient.getSession();
+    if (!data?.token) {
+      const signedIn = await authClient.signIn.email({ email, password });
+      if (signedIn.error) {
+        return {
+          error: new Error(signedIn.error.message || "Account created. Please sign in."),
+        };
+      }
+    }
+
+    await refetch();
+
     try {
       await ensureRole(role);
     } catch (roleError) {

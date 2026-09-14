@@ -51,6 +51,7 @@ export default function Auth() {
   const [accountType, setAccountType] = useState<AccountRole>(initialRole);
   const [tab, setTab] = useState(initialTab);
   const [isLoading, setIsLoading] = useState(false);
+  const [resumePath, setResumePath] = useState<string | null>(null);
   const { user, loading, signIn, signUp } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -63,9 +64,10 @@ export default function Auth() {
   }, [params, fromInvite]);
 
   useEffect(() => {
-    if (loading || !user || !redirectTo) return;
-    navigate(redirectTo, { replace: true });
-  }, [loading, user, redirectTo, navigate]);
+    if (loading || !user) return;
+    const dest = resumePath ?? (isLoading ? null : redirectTo);
+    if (dest) navigate(dest, { replace: true });
+  }, [loading, user, redirectTo, navigate, resumePath, isLoading]);
 
   const goAfterAuth = async (created: boolean) => {
     await queryClient.invalidateQueries({ queryKey: ["me"] });
@@ -87,7 +89,7 @@ export default function Auth() {
     }
 
     if (redirectTo) {
-      navigate(redirectTo);
+      setResumePath(redirectTo);
       return;
     }
 
@@ -98,7 +100,7 @@ export default function Auth() {
           ? "Finance is ready. Invite a student from Family when you want to view their portal."
           : "Signed in to the parent portal.",
       });
-      navigate(defaultPath("parent", created));
+      setResumePath(defaultPath("parent", created));
       return;
     }
 
@@ -109,7 +111,7 @@ export default function Auth() {
           ? "You can apply for school and infrastructure finance."
           : "Signed in to the institution portal.",
       });
-      navigate(defaultPath("institution", created));
+      setResumePath(defaultPath("institution", created));
       return;
     }
 
@@ -117,7 +119,7 @@ export default function Auth() {
       title: created ? "Account created!" : "Welcome back!",
       description: created ? "Successfully signed up. Welcome!" : "Successfully signed in.",
     });
-    navigate("/");
+    setResumePath("/");
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -141,7 +143,7 @@ export default function Auth() {
           title: "Could not finish sign in",
           description: err instanceof Error ? err.message : "Signed in, but access could not be set.",
         });
-        navigate(redirectTo || "/");
+        setResumePath(redirectTo || "/");
       }
     }
 
@@ -179,7 +181,7 @@ export default function Auth() {
       try {
         await goAfterAuth(true);
       } catch {
-        navigate(redirectTo || defaultPath(accountType, true));
+        setResumePath(redirectTo || defaultPath(accountType, true));
       }
     }
 
@@ -199,10 +201,10 @@ export default function Auth() {
         ? "Sign in to manage finances and your child's school portal"
         : "Sign in to access your courses and assignments";
 
-  if (!loading && user && redirectTo) {
+  if (user && (resumePath || (redirectTo && !isLoading))) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
-        Continuing to your application…
+        Taking you in…
       </div>
     );
   }

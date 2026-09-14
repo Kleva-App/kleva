@@ -290,7 +290,8 @@ textarea:focus-visible {
     display: flex;
   }
 
-  .nav__toggle {
+  /* Beat `.btn { display: inline-flex }` so this stays mobile-only. */
+  .nav__toggle.btn {
     display: none;
   }
 
