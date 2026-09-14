@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { brand } from "../emails/brand.js";
+import { getOptionalEnv } from "./env.js";
 
 type SendEmailInput = {
   to: string;
@@ -27,8 +28,8 @@ export function emailLogoAttachment() {
 }
 
 export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult> {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_MAIL_FROM || "Kleva <hello@joinkleva.app>";
+  const apiKey = getOptionalEnv("RESEND_API_KEY");
+  const from = getOptionalEnv("RESEND_MAIL_FROM", "Kleva <hello@joinkleva.app>");
 
   if (!apiKey) {
     console.log(
@@ -59,15 +60,4 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
   }
 
   return { delivered: true };
-}
-
-export function studentAppOrigin() {
-  const configured = (process.env.STUDENT_ORIGIN || "").replace(/\/$/, "");
-  if (process.env.NODE_ENV !== "production") {
-    if (configured.includes("localhost") || configured.includes("127.0.0.1")) {
-      return configured;
-    }
-    return "http://localhost:5173";
-  }
-  return configured || "http://localhost:5173";
 }

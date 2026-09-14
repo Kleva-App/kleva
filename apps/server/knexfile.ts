@@ -1,15 +1,14 @@
 import type { Knex } from "knex";
-import dotenv from "dotenv";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { getRequiredEnv } from "./src/lib/env.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, ".env") });
 
-const connectionString = process.env.DATABASE_URL;
+const connectionString = getRequiredEnv("DATABASE_URL");
 const needsSsl =
-  Boolean(connectionString?.includes("neon.tech")) ||
-  Boolean(connectionString?.includes("sslmode=require"));
+  connectionString.includes("neon.tech") ||
+  connectionString.includes("sslmode=require");
 
 const shared: Knex.Config = {
   client: "pg",

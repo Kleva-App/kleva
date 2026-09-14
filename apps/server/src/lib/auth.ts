@@ -1,27 +1,28 @@
 import { betterAuth } from "better-auth";
 import { Pool } from "pg";
+import { getOptionalEnv, getRequiredEnv } from "./env.js";
 import { assignAccountRole } from "./access.js";
 import { getSignupRole } from "./signup-role.js";
 
-const connectionString = process.env.DATABASE_URL;
+const connectionString = getRequiredEnv("DATABASE_URL");
 const needsSsl =
-  Boolean(connectionString?.includes("neon.tech")) ||
-  Boolean(connectionString?.includes("sslmode=require"));
+  connectionString.includes("neon.tech") ||
+  connectionString.includes("sslmode=require");
 
 const pool = new Pool({
   connectionString,
   ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
 });
 
-const baseURL = process.env.BETTER_AUTH_URL ?? "http://localhost:3001";
+const baseURL = getRequiredEnv("BETTER_AUTH_URL");
 // Teacher/student apps are on different origins (Render). Cross-site cookies
 // require SameSite=None; Secure. Keep Lax on plain local http.
 const crossSiteCookies =
-  baseURL.startsWith("https://") || process.env.NODE_ENV === "production";
+  baseURL.startsWith("https://") || getOptionalEnv("NODE_ENV") === "production";
 
 export const auth = betterAuth({
   database: pool,
-  secret: process.env.BETTER_AUTH_SECRET,
+  secret: getRequiredEnv("BETTER_AUTH_SECRET"),
   baseURL,
   // Allow any Origin that calls the API (pairs with cors origin: true).
   trustedOrigins: async (request) => {

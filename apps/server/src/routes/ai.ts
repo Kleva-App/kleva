@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { getOptionalEnv } from "../lib/env.js";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth.js";
 
 export const aiRouter = Router();
@@ -14,7 +15,7 @@ const chatSchema = z.object({
 aiRouter.post("/ai/assistant", requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
     const body = chatSchema.parse(req.body);
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = getOptionalEnv("OPENAI_API_KEY");
 
     if (!apiKey) {
       res.status(503).json({
@@ -30,7 +31,7 @@ aiRouter.post("/ai/assistant", requireAuth, async (req: AuthenticatedRequest, re
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
+        model: getOptionalEnv("OPENAI_MODEL", "gpt-4o-mini"),
         messages: [
           {
             role: "system",

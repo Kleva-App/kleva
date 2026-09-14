@@ -4,13 +4,14 @@ import { z } from "zod";
 import { requireAuth, requireParent, type AuthenticatedRequest } from "../middleware/auth.js";
 import { db } from "../lib/db.js";
 import { getParentChildren } from "../lib/access.js";
-import { studentAppOrigin } from "../lib/mail.js";
+import { getRequiredEnv } from "../lib/env.js";
 import { sendInviteEmail } from "../emails/index.js";
 
 export const parentRouter = Router();
 
 const RELATIONSHIPS = ["Mother", "Father", "Guardian", "Sponsor", "Other"] as const;
 const INVITE_DAYS = 14;
+const studentAppOrigin = getRequiredEnv("STUDENT_ORIGIN");
 
 parentRouter.use("/parent", requireAuth, requireParent);
 
@@ -254,7 +255,7 @@ parentRouter.patch("/parent/profile", async (req: AuthenticatedRequest, res) => 
 });
 
 function inviteUrl(token: string) {
-  return `${studentAppOrigin()}/invite/${token}`;
+  return `${studentAppOrigin}/invite/${token}`;
 }
 
 function serializeInvite(

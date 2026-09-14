@@ -1,17 +1,15 @@
 import knex, { type Knex } from "knex";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { getRequiredEnv } from "./env.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function connection() {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    console.warn("[db] DATABASE_URL is required (Neon Postgres connection string)");
-  }
+  const connectionString = getRequiredEnv("DATABASE_URL");
   const needsSsl =
-    Boolean(connectionString?.includes("neon.tech")) ||
-    Boolean(connectionString?.includes("sslmode=require"));
+    connectionString.includes("neon.tech") ||
+    connectionString.includes("sslmode=require");
   return {
     connectionString,
     ssl: needsSsl ? { rejectUnauthorized: false } : undefined,

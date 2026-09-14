@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom";
+import { useFamily } from "@/contexts/FamilyContext";
 import { useMe } from "@/hooks/use-me";
 
 export function ParentOnly({ children }: { children: React.ReactNode }) {
@@ -10,6 +11,21 @@ export function ParentOnly({ children }: { children: React.ReactNode }) {
 
   if (!isParent) {
     return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+/** School portal pages — hidden from parents until they have a linked student. */
+export function RequiresLinkedStudent({ children }: { children: React.ReactNode }) {
+  const { isParent, children: linked, loading } = useFamily();
+
+  if (loading) {
+    return <>{children}</>;
+  }
+
+  if (isParent && linked.length === 0) {
+    return <Navigate to="/finance/home" replace />;
   }
 
   return <>{children}</>;

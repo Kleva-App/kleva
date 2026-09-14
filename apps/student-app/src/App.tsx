@@ -4,7 +4,7 @@ import { TooltipProvider } from "@nudle/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Layout } from "./components/Layout";
-import { ParentOnly } from "./components/ParentOnly";
+import { ParentOnly, RequiresLinkedStudent } from "./components/ParentOnly";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { FamilyProvider } from "./contexts/FamilyContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -65,6 +65,14 @@ function ParentPage({ children }: { children: React.ReactNode }) {
   );
 }
 
+function StudentPortalPage({ children }: { children: React.ReactNode }) {
+  return (
+    <AppPage>
+      <RequiresLinkedStudent>{children}</RequiresLinkedStudent>
+    </AppPage>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -77,14 +85,14 @@ const App = () => (
               <Routes>
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/invite/:token" element={<Invite />} />
-                <Route path="/" element={<AppPage><Dashboard /></AppPage>} />
-                <Route path="/courses" element={<AppPage><Courses /></AppPage>} />
-                <Route path="/assignments" element={<AppPage><Assignments /></AppPage>} />
-                <Route path="/calendar" element={<AppPage><Calendar /></AppPage>} />
-                <Route path="/subjects" element={<AppPage><Subjects /></AppPage>} />
-                <Route path="/report-card" element={<AppPage><ReportCard /></AppPage>} />
-                <Route path="/inbox" element={<AppPage><Inbox /></AppPage>} />
-                <Route path="/insights" element={<AppPage><Insights /></AppPage>} />
+                <Route path="/" element={<StudentPortalPage><Dashboard /></StudentPortalPage>} />
+                <Route path="/courses" element={<StudentPortalPage><Courses /></StudentPortalPage>} />
+                <Route path="/assignments" element={<StudentPortalPage><Assignments /></StudentPortalPage>} />
+                <Route path="/calendar" element={<StudentPortalPage><Calendar /></StudentPortalPage>} />
+                <Route path="/subjects" element={<StudentPortalPage><Subjects /></StudentPortalPage>} />
+                <Route path="/report-card" element={<StudentPortalPage><ReportCard /></StudentPortalPage>} />
+                <Route path="/inbox" element={<StudentPortalPage><Inbox /></StudentPortalPage>} />
+                <Route path="/insights" element={<StudentPortalPage><Insights /></StudentPortalPage>} />
                 <Route path="/notices" element={<AppPage><Notices /></AppPage>} />
                 <Route path="/account" element={<AppPage><Account /></AppPage>} />
                 <Route path="/settings" element={<AppPage><Settings /></AppPage>} />

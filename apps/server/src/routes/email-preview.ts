@@ -3,6 +3,7 @@ import path from "node:path";
 import { Router } from "express";
 import { brand } from "../emails/brand.js";
 import { renderInviteEmail } from "../emails/index.js";
+import { getOptionalEnv } from "../lib/env.js";
 
 export const emailPreviewRouter = Router();
 
@@ -14,7 +15,7 @@ emailPreviewRouter.get("/emails/assets/kleva-mark.png", (_req, res) => {
 });
 
 emailPreviewRouter.get("/emails/preview/invite", (_req, res) => {
-  if (process.env.NODE_ENV === "production") {
+  if (getOptionalEnv("NODE_ENV") === "production") {
     res.status(404).json({ error: "Not found" });
     return;
   }

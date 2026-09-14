@@ -55,8 +55,9 @@ const financeItems = [
 
 export function AppSidebar() {
   const { open, isMobile } = useSidebar();
-  const { isParent } = useFamily();
+  const { isParent, children, loading } = useFamily();
   const showLabels = open || isMobile;
+  const showSchoolNav = !isParent || loading || children.length > 0;
 
   const secondaryItems = isParent
     ? [
@@ -77,11 +78,13 @@ export function AppSidebar() {
           <AccountSwitcher />
         </SidebarHeader>
 
-        <SidebarMenu className={cn("space-y-1", showLabels ? "px-2" : "items-center px-0")}>
-          {mainItems.map((item) => (
-            <SidebarItem key={item.title} item={item} showLabels={showLabels} end={item.url === "/"} />
-          ))}
-        </SidebarMenu>
+        {showSchoolNav && (
+          <SidebarMenu className={cn("space-y-1", showLabels ? "px-2" : "items-center px-0")}>
+            {mainItems.map((item) => (
+              <SidebarItem key={item.title} item={item} showLabels={showLabels} end={item.url === "/"} />
+            ))}
+          </SidebarMenu>
+        )}
 
         {isParent && (
           <>

@@ -1,4 +1,4 @@
-import "./env.js";
+import { getOptionalEnv } from "./lib/env.js";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
@@ -22,7 +22,7 @@ import { emailPreviewRouter } from "./routes/email-preview.js";
 import { financeRouter } from "./routes/finance.js";
 
 const app = express();
-const port = Number(process.env.PORT) || 3001;
+const port = Number(getOptionalEnv("PORT", "3001"));
 
 app.use(helmet({ crossOriginResourcePolicy: false }));
 // Reflect request Origin so credentialed cookies work from any frontend.
