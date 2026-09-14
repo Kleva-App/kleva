@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { authBaseURL, authClient } from "@/lib/auth-client";
 import { api } from "@/lib/api";
 
-type AccountRole = "student" | "parent";
+export type AccountRole = "student" | "parent" | "institution";
 
 interface AuthContextType {
   user: { id: string; email: string; name: string } | null;
@@ -21,17 +21,18 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 async function ensureRole(role: AccountRole) {
+  if (role === "student") return;
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const me = await api.get<{ roles: string[] }>("/api/me");
-    if (role !== "parent" || me.roles.includes("parent")) return;
+    if (me.roles.includes(role)) return;
     try {
-      await api.post("/api/roles", { role: "parent" });
+      await api.post("/api/roles", { role });
       return;
     } catch {
       await new Promise((resolve) => setTimeout(resolve, 200 * (attempt + 1)));
     }
   }
-  throw new Error("Account created, but parent access could not be set.");
+  throw new Error("Account created, but access could not be set.");
 }
 
 function authErrorMessage(payload: unknown, fallback: string) {
@@ -90,7 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         error:
           roleError instanceof Error
             ? roleError
-            : new Error("Account created, but parent access could not be set."),
+            : new Error("Account created, but access could not be set."),
       };
     }
     return { error: null };

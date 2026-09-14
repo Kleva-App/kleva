@@ -33,9 +33,10 @@ export function ProfileMenu({ className }: ProfileMenuProps) {
   const { toast } = useToast();
   const { user, signOut } = useAuth();
   const [signOutOpen, setSignOutOpen] = useState(false);
-  const { data: me, isParent } = useMe();
+  const { data: me, isParent, isInstitution } = useMe();
 
   const name = me?.profile?.full_name || user?.name || "Student";
+  const roleLabel = isInstitution ? "Institution" : isParent ? "Parent" : "Student";
   const email = me?.profile?.email || user?.email || "";
   const initial = name.charAt(0).toUpperCase();
 
@@ -62,7 +63,7 @@ export function ProfileMenu({ className }: ProfileMenuProps) {
             <div className="hidden sm:block text-right pl-1 min-w-0">
               <p className="text-sm font-semibold leading-none truncate max-w-[140px]">{name}</p>
               <p className="text-[11px] text-muted-foreground mt-1 truncate max-w-[140px]">
-                {isParent ? "Parent" : "Student"}
+                {roleLabel}
                 {email ? ` · ${email}` : ""}
               </p>
             </div>
@@ -76,7 +77,7 @@ export function ProfileMenu({ className }: ProfileMenuProps) {
             <div className="flex flex-col gap-1">
               <p className="text-sm font-semibold leading-none">{name}</p>
               <p className="text-xs text-muted-foreground truncate">
-                {isParent ? "Parent" : "Student"}
+                {roleLabel}
                 {email ? ` · ${email}` : ""}
               </p>
             </div>

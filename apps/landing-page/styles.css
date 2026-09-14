@@ -225,23 +225,13 @@ textarea:focus-visible {
 
 .nav__toggle {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
-  color: var(--fg);
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.875rem;
 }
 
-.nav__toggle svg {
-  display: block;
-}
-
-.nav__toggle svg[hidden] {
+.nav__toggle [hidden] {
   display: none !important;
 }
 

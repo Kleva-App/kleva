@@ -33,21 +33,25 @@ function SchoolMark({
 
 export function AccountSwitcher({ className }: { className?: string }) {
   const navigate = useNavigate();
-  const { isParent, children, activeChild, setActiveChild } = useFamily();
+  const { isParent, isInstitution, children, activeChild, setActiveChild } = useFamily();
   const { data: me } = useMe();
   const { open, isMobile, setOpenMobile } = useSidebar();
   const showLabels = open || isMobile;
 
   const school = dummySchoolForId(isParent ? activeChild?.id : me?.id);
-  const parentName = me?.profile?.full_name || me?.email || "Parent";
-  const title = isParent
-    ? (activeChild?.name ?? "Select a student")
-    : me?.profile?.full_name || "Student";
-  const subtitle = isParent && !activeChild
-    ? children.length
-      ? "Choose a student"
-      : "No students linked"
-    : `${school.name} · ${school.city}`;
+  const parentName = me?.profile?.full_name || me?.email || (isInstitution ? "Institution" : "Parent");
+  const title = isInstitution
+    ? me?.profile?.full_name || "Institution"
+    : isParent
+      ? (activeChild?.name ?? "Select a student")
+      : me?.profile?.full_name || "Student";
+  const subtitle = isInstitution
+    ? "Institution account"
+    : isParent && !activeChild
+      ? children.length
+        ? "Choose a student"
+        : "No students linked"
+      : `${school.name} · ${school.city}`;
 
   const go = (path: string) => {
     if (isMobile) setOpenMobile(false);

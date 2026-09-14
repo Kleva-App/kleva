@@ -93,20 +93,20 @@ export default function FinanceApplications() {
   };
 
   return (
-    <div>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+    <div className="min-w-0">
+      <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
           <h1 className="page-title">My Applications</h1>
-          <p className="page-subtitle mt-1">
+          <p className="page-subtitle mt-1 text-pretty">
             Track every Blue Finance application and facility linked to your account.
           </p>
         </div>
-        <Button asChild className="rounded-full">
+        <Button asChild className="w-full shrink-0 rounded-full sm:w-auto">
           <Link to="/finance/apply">New application</Link>
         </Button>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="mt-6 grid min-w-0 grid-cols-2 gap-3 sm:grid-cols-4">
         {[
           { label: "Total", value: counts.total, color: "text-foreground" },
           { label: "Approved", value: counts.approved, color: "text-emerald-600" },
@@ -115,7 +115,7 @@ export default function FinanceApplications() {
         ].map((s) => (
           <div
             key={s.label}
-            className="rounded-2xl border border-border bg-card p-4 text-center shadow-sm"
+            className="min-w-0 rounded-2xl border border-border bg-card px-3 py-4 text-center shadow-sm sm:p-4"
           >
             <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
             <p className="mt-1 text-xs text-muted-foreground">{s.label}</p>
@@ -123,19 +123,19 @@ export default function FinanceApplications() {
         ))}
       </div>
 
-      <section className="mt-8">
+      <section className="mt-8 min-w-0">
         <h2 className="text-lg font-semibold text-foreground">Active facilities</h2>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div className="mt-3 grid min-w-0 gap-3 sm:grid-cols-2">
           {FACILITIES.map((f) => {
             const pct = Math.round((f.used / f.limit) * 100);
             return (
-              <div key={f.name} className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <div key={f.name} className="min-w-0 rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5">
+                <div className="flex min-w-0 items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <f.icon className="h-4 w-4" />
                   </span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-foreground">{f.name}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-foreground">{f.name}</p>
                     <p className="truncate text-xs text-muted-foreground">{f.detail}</p>
                   </div>
                 </div>
@@ -154,15 +154,15 @@ export default function FinanceApplications() {
         </div>
       </section>
 
-      <section className="mt-8">
+      <section className="mt-8 min-w-0">
         <h2 className="text-lg font-semibold text-foreground">All applications</h2>
         {isPending ? (
           <p className="mt-6 text-sm text-muted-foreground">Loading applications…</p>
         ) : applications.length === 0 ? (
-          <div className="mt-3 rounded-2xl border border-dashed border-border bg-muted/30 px-6 py-10 text-center">
+          <div className="mt-3 rounded-2xl border border-dashed border-border bg-muted/30 px-4 py-10 text-center sm:px-6">
             <GraduationCap className="mx-auto h-8 w-8 text-muted-foreground" />
             <p className="mt-3 text-sm font-medium">No applications yet</p>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-pretty text-sm text-muted-foreground">
               Apply for education finance to track status, disbursements and instalments here.
             </p>
             <Button asChild className="mt-4 rounded-full">
@@ -170,7 +170,7 @@ export default function FinanceApplications() {
             </Button>
           </div>
         ) : (
-          <div className="mt-3 space-y-3">
+          <div className="mt-3 min-w-0 space-y-3">
             {applications.map((a) => {
               const s = statusStyles[a.status] ?? statusStyles["Under Review"];
               const StatusIcon = s.icon;
@@ -181,8 +181,11 @@ export default function FinanceApplications() {
                 : submitted.toLocaleDateString();
               const amount = a.amount.startsWith("$") ? a.amount : `$${a.amount}`;
               return (
-                <div key={a.id} className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-                  <div className="flex flex-wrap items-start gap-4">
+                <div
+                  key={a.id}
+                  className="min-w-0 rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5"
+                >
+                  <div className="flex min-w-0 items-start gap-3 sm:gap-4">
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Icon className="h-5 w-5" />
                     </span>
@@ -198,7 +201,7 @@ export default function FinanceApplications() {
                       </div>
                       <p className="mt-0.5 text-sm text-muted-foreground">{a.facility}</p>
                       {a.school?.name && (
-                        <p className="mt-0.5 text-xs text-muted-foreground">
+                        <p className="mt-0.5 break-words text-xs text-muted-foreground">
                           {a.school.name}
                           {a.school.level === "primary"
                             ? " · Primary"
@@ -215,12 +218,12 @@ export default function FinanceApplications() {
                         Ref {a.publicRef} · Submitted {submittedLabel}
                       </p>
                     </div>
-                    <p className="text-base font-bold text-foreground">{amount}</p>
+                    <p className="shrink-0 text-base font-bold text-foreground">{amount}</p>
                   </div>
 
-                  <div className="mt-4 flex items-start gap-2 rounded-xl bg-muted/50 px-4 py-3 text-xs text-muted-foreground">
+                  <div className="mt-4 flex items-start gap-2 rounded-xl bg-muted/50 px-3 py-3 text-xs text-muted-foreground sm:px-4">
                     <StatusIcon className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${s.iconColor}`} />
-                    <span>{a.note}</span>
+                    <span className="min-w-0 break-words">{a.note}</span>
                   </div>
 
                   {a.progress && (

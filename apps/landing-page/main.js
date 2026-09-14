@@ -1,7 +1,7 @@
 const toggle = document.querySelector("[data-nav-toggle]");
 const mobile = document.querySelector("[data-nav-mobile]");
-const iconOpen = document.querySelector("[data-icon-open]");
-const iconClose = document.querySelector("[data-icon-close]");
+const toggleOpen = document.querySelector("[data-toggle-open]");
+const toggleClose = document.querySelector("[data-toggle-close]");
 const nav = document.querySelector(".nav");
 
 const isLocal =
@@ -18,18 +18,24 @@ const PORTALS = isLocal
 document.querySelectorAll("[data-portal]").forEach((link) => {
   const dest = PORTALS[link.getAttribute("data-portal")];
   if (!dest) return;
-  link.setAttribute("href", dest);
-  link.setAttribute("target", "_blank");
-  link.setAttribute("rel", "noopener noreferrer");
+  const path = link.getAttribute("data-portal-path") || "";
+  link.setAttribute("href", dest.replace(/\/$/, "") + path);
+  if (link.hasAttribute("data-portal-same-tab")) {
+    link.removeAttribute("target");
+    link.removeAttribute("rel");
+  } else {
+    link.setAttribute("target", "_blank");
+    link.setAttribute("rel", "noopener noreferrer");
+  }
 });
 
 function setMenu(open) {
   mobile?.classList.toggle("is-open", open);
   nav?.classList.toggle("is-open", open);
   toggle?.setAttribute("aria-expanded", String(open));
-  if (iconOpen && iconClose) {
-    iconOpen.hidden = open;
-    iconClose.hidden = !open;
+  if (toggleOpen && toggleClose) {
+    toggleOpen.hidden = open;
+    toggleClose.hidden = !open;
   }
 }
 

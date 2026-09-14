@@ -58,3 +58,27 @@ export async function requireParent(
     });
   }
 }
+
+export async function requireFinance(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    if (!req.user?.id) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const parent = await userHasRole(req.user.id, "parent");
+    const institution = await userHasRole(req.user.id, "institution");
+    if (!parent && !institution) {
+      res.status(403).json({ error: "Finance access required" });
+      return;
+    }
+    next();
+  } catch (err) {
+    res.status(500).json({
+      error: err instanceof Error ? err.message : "Failed to verify finance access",
+    });
+  }
+}

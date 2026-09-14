@@ -44,10 +44,14 @@ export function useMe() {
 
   const roles = query.data?.roles ?? [];
   const isParent = roles.includes("parent");
+  const isInstitution = roles.includes("institution");
+  const canFinance = isParent || isInstitution;
 
   return {
     ...query,
     isParent,
+    isInstitution,
+    canFinance,
     roles,
     children: query.data?.children ?? [],
   };

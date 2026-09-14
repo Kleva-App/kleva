@@ -55,9 +55,14 @@ const financeItems = [
 
 export function AppSidebar() {
   const { open, isMobile } = useSidebar();
-  const { isParent, children, loading } = useFamily();
+  const { isParent, isInstitution, canFinance, children, loading } = useFamily();
   const showLabels = open || isMobile;
-  const showSchoolNav = !isParent || loading || children.length > 0;
+  const showSchoolNav = (!isParent && !isInstitution) || loading || children.length > 0;
+  const applyUrl = isInstitution ? "/finance/school" : "/finance/apply";
+
+  const financeNav = financeItems.map((item) =>
+    item.title === "Apply" ? { ...item, url: applyUrl } : item,
+  );
 
   const secondaryItems = isParent
     ? [
@@ -86,7 +91,7 @@ export function AppSidebar() {
           </SidebarMenu>
         )}
 
-        {isParent && (
+        {canFinance && (
           <>
             {showLabels ? (
               <p className="px-5 pt-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -96,7 +101,7 @@ export function AppSidebar() {
               <div className="mx-2 my-2 border-t border-sidebar-border" />
             )}
             <SidebarMenu className={cn("space-y-1", showLabels ? "px-2" : "items-center px-0")}>
-              {financeItems.map((item) => (
+              {financeNav.map((item) => (
                 <SidebarItem key={item.title} item={item} showLabels={showLabels} />
               ))}
             </SidebarMenu>

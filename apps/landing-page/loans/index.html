@@ -49,19 +49,14 @@
         </div>
 
         <button
-          class="nav__toggle"
+          class="nav__toggle btn btn--primary"
           type="button"
           data-nav-toggle
           aria-expanded="false"
           aria-controls="mobile-nav"
-          aria-label="Toggle menu"
         >
-          <svg data-icon-open width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 7h16M4 12h16M4 17h16" />
-          </svg>
-          <svg data-icon-close hidden width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M6 6l12 12M18 6L6 18" />
-          </svg>
+          <span data-toggle-open>Get started</span>
+          <span data-toggle-close hidden>Close</span>
         </button>
       </div>
 
@@ -78,593 +73,76 @@
       </div>
     </header>
 
-    <div class="apply-progress" data-progress>
-      <div class="apply-progress__inner">
-        <div class="apply-progress__meta">
-          <span class="apply-progress__label" data-progress-label>Step 1 of 5</span>
-          <span class="apply-progress__pct" data-progress-pct>20%</span>
-        </div>
-        <div class="apply-progress__track" aria-hidden="true">
-          <div class="apply-progress__fill" data-progress-fill></div>
-        </div>
-      </div>
-    </div>
-
     <main id="main">
-      <form class="apply" data-apply-form novalidate>
-        <!-- ======================== STEP 0 ======================== -->
-        <section class="apply-step" data-step="0">
-          <div class="apply__intro">
-            <p class="kicker">Education finance · Zimbabwe</p>
-            <h1>Education loans for Zimbabwean families and schools / institutions, made simple.</h1>
+      <div class="apply">
+        <div class="apply__intro">
+          <p class="kicker">Education finance · Zimbabwe</p>
+          <h1>Education loans, made simple.</h1>
+          <p>
+            Kleva has partnered with Diamond Bank to fund school fees — paid directly to the
+            school — and to finance infrastructure, equipment, and working capital for schools
+            and institutions. Create an account in the family portal to apply. It takes about
+            ten minutes.
+          </p>
+        </div>
+
+        <div class="loan-paths">
+          <article class="loan-path">
+            <p class="kicker">Families</p>
+            <h2>Parent</h2>
             <p>
-              Kleva has partnered with Diamond Bank to fund school fees — paid directly to your
-              child's school — and to finance infrastructure, equipment, and working capital for
-              Zimbabwean schools and institutions. Pick your school and employer to begin, or apply
-              as an institution. It takes about ten minutes.
+              Apply for school fees finance. Pick the school, confirm your employer, and funds
+              are paid into the school account.
             </p>
-          </div>
+            <a
+              class="btn btn--primary"
+              data-portal="student"
+              data-portal-same-tab
+              data-portal-path="/auth?role=parent&amp;tab=signup&amp;next=/finance/apply"
+              href="https://student.joinkleva.app/auth?role=parent&amp;tab=signup&amp;next=/finance/apply"
+            >
+              Apply as a parent
+            </a>
+          </article>
+          <article class="loan-path">
+            <p class="kicker">Schools</p>
+            <h2>School / institution</h2>
+            <p>
+              Apply for fee bridging, working capital, infrastructure and equipment finance for
+              your institution.
+            </p>
+            <a
+              class="btn btn--primary"
+              data-portal="student"
+              data-portal-same-tab
+              data-portal-path="/auth?role=institution&amp;tab=signup&amp;next=/finance/school"
+              href="https://student.joinkleva.app/auth?role=institution&amp;tab=signup&amp;next=/finance/school"
+            >
+              Apply as an institution
+            </a>
+          </article>
+        </div>
 
-          <div class="apply-card">
-            <div class="field">
-              <span>Who is applying?</span>
-              <div class="segmented" role="group" aria-label="Applicant type">
-                <button type="button" class="segmented__btn is-active" data-applicant-type="parent" aria-pressed="true">
-                  Parent / student
-                </button>
-                <button type="button" class="segmented__btn" data-applicant-type="school" aria-pressed="false">
-                  School / institution
-                </button>
-              </div>
-            </div>
+        <div class="perks">
+          <article class="perk">
+            <strong>Paid to the school</strong>
+            <p>Family loans go straight to the institution's account.</p>
+          </article>
+          <article class="perk">
+            <strong>Same portal</strong>
+            <p>Sign up once. We'll take you into the right application.</p>
+          </article>
+          <article class="perk">
+            <strong>Two-day response</strong>
+            <p>We verify documents within 2 business days.</p>
+          </article>
+        </div>
 
-            <div data-applicant-panel="parent">
-              <div class="apply-grid" style="margin-top: 1.25rem">
-                <div class="search-select field--full" data-search-select="school">
-                  <span class="field__label" id="school-label">Select your child's school</span>
-                  <button type="button" class="apply-input search-select__trigger" data-search-trigger aria-labelledby="school-label">
-                    <span data-search-label class="is-placeholder" data-placeholder="Search schools and universities">Search schools and universities</span>
-                    <span aria-hidden="true">▾</span>
-                  </button>
-                  <input type="hidden" name="school" data-search-value />
-                  <div class="search-select__panel" data-search-panel hidden>
-                    <input type="search" class="search-select__query" data-search-query placeholder="Type to search…" autocomplete="off" />
-                    <ul class="search-select__list" data-search-list></ul>
-                  </div>
-                </div>
-
-                <div class="search-select field--full" data-search-select="employer">
-                  <span class="field__label" id="employer-label">Select your employer</span>
-                  <button type="button" class="apply-input search-select__trigger" data-search-trigger aria-labelledby="employer-label">
-                    <span data-search-label class="is-placeholder" data-placeholder="Search employers">Search employers</span>
-                    <span aria-hidden="true">▾</span>
-                  </button>
-                  <input type="hidden" name="employer" data-search-value />
-                  <div class="search-select__panel" data-search-panel hidden>
-                    <input type="search" class="search-select__query" data-search-query placeholder="Type to search…" autocomplete="off" />
-                    <ul class="search-select__list" data-search-list></ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="apply-nav" style="border-top: 0; padding-top: 1rem; margin-top: 0.5rem">
-                <button class="btn btn--primary" type="button" data-apply-start disabled>Start application</button>
-              </div>
-              <p class="field__hint" data-start-hint>Choose both a school and an employer to continue.</p>
-            </div>
-
-            <div data-applicant-panel="school" hidden>
-              <div class="school-blurb" style="margin-top: 1.25rem">
-                Zimbabwean schools and institutions can apply directly to Diamond Bank for
-                working capital, fee bridging, infrastructure and equipment finance — over and above
-                funding pupils' fees.
-              </div>
-              <p class="apply-card__lede" style="margin-top: 1rem">
-                School applications are handled through a dedicated relationship manager who will
-                tailor terms to your institution. Share your details below and we'll be in touch
-                within two business days.
-              </p>
-              <div class="apply-grid">
-                <label class="field">
-                  <span>School / institution name</span>
-                  <input class="apply-input" name="institution" type="text" placeholder="e.g. Gateway High School" />
-                </label>
-                <label class="field">
-                  <span>Contact person</span>
-                  <input class="apply-input" name="contactPerson" type="text" placeholder="Head, bursar or finance officer" />
-                </label>
-                <label class="field">
-                  <span>Contact email</span>
-                  <input class="apply-input" name="schoolEmail" type="email" placeholder="admin@school.ac.zw" />
-                </label>
-                <label class="field">
-                  <span>Contact phone</span>
-                  <input class="apply-input" name="schoolPhone" type="tel" value="+263 " />
-                </label>
-              </div>
-              <div class="field" style="margin-top: 1rem">
-                <span>What do you need funding for?</span>
-                <div class="chip-row">
-                  <label class="chip">
-                    <input type="radio" name="schoolPurpose" value="School fees bridging" checked />
-                    School fees bridging
-                  </label>
-                  <label class="chip">
-                    <input type="radio" name="schoolPurpose" value="Working capital" />
-                    Working capital
-                  </label>
-                  <label class="chip">
-                    <input type="radio" name="schoolPurpose" value="Infrastructure development" />
-                    Infrastructure development
-                  </label>
-                  <label class="chip">
-                    <input type="radio" name="schoolPurpose" value="Equipment & resources" />
-                    Equipment &amp; resources
-                  </label>
-                </div>
-              </div>
-              <p class="apply-status" data-step-status hidden></p>
-              <div class="apply-nav" style="border-top: 0; padding-top: 1rem">
-                <button class="btn btn--primary" type="button" data-school-submit disabled>Request a call back</button>
-              </div>
-              <p class="field__hint">
-                Prefer to talk now? Email
-                <a href="mailto:schools@diamondbank.finance">schools@diamondbank.finance</a>
-                or call <a href="tel:+263242700000">+263 242 700 000</a>.
-              </p>
-            </div>
-          </div>
-
-          <div class="perks" data-applicant-panel="parent">
-            <article class="perk">
-              <strong>Paid to the school</strong>
-              <p>Funds go straight to the institution's account.</p>
-            </article>
-            <article class="perk">
-              <strong>Salary-deducted</strong>
-              <p>Repayments come off your payslip each month.</p>
-            </article>
-            <article class="perk">
-              <strong>Two-day response</strong>
-              <p>We verify documents within 2 business days.</p>
-            </article>
-          </div>
-        </section>
-
-        <!-- ======================== STEP 1 ======================== -->
-        <section class="apply-step apply-card" data-step="1" hidden>
-          <p class="kicker">Step 1 of 5</p>
-          <h2>Your details</h2>
-          <p class="apply-card__lede">Use the names exactly as they appear on your national ID.</p>
-
-          <div class="apply-grid">
-            <label class="field">
-              <span>Title</span>
-              <select class="apply-input" name="title">
-                <option>Mr</option>
-                <option>Mrs</option>
-                <option>Miss</option>
-                <option>Other</option>
-              </select>
-            </label>
-            <label class="field">
-              <span>Gender</span>
-              <select class="apply-input" name="gender">
-                <option>Male</option>
-                <option>Female</option>
-                <option>Prefer not to say</option>
-              </select>
-            </label>
-            <label class="field">
-              <span>First name</span>
-              <input class="apply-input" name="name" type="text" autocomplete="given-name" />
-            </label>
-            <label class="field">
-              <span>Surname</span>
-              <input class="apply-input" name="surname" type="text" autocomplete="family-name" />
-            </label>
-            <label class="field">
-              <span>Maiden surname</span>
-              <input class="apply-input" name="maiden" type="text" />
-            </label>
-            <label class="field">
-              <span>Date of birth</span>
-              <input class="apply-input" name="dob" type="date" />
-            </label>
-            <label class="field">
-              <span>National ID</span>
-              <input class="apply-input" name="nationalId" type="text" placeholder="63-1234567 A 42" />
-            </label>
-            <label class="field">
-              <span>Passport number</span>
-              <input class="apply-input" name="passport" type="text" />
-            </label>
-            <label class="field">
-              <span>Email</span>
-              <input class="apply-input" name="email" type="email" autocomplete="email" />
-            </label>
-            <label class="field">
-              <span>Country of birth</span>
-              <input class="apply-input" name="countryOfBirth" type="text" value="Zimbabwe" />
-            </label>
-            <label class="field">
-              <span>Phone number</span>
-              <input class="apply-input" name="phone" type="tel" value="+263 " autocomplete="tel" />
-            </label>
-          </div>
-
-          <div class="apply-subhead"><p class="kicker">Bank details</p></div>
-          <div class="apply-grid">
-            <label class="field">
-              <span>Bank name</span>
-              <input class="apply-input" name="bankName" type="text" />
-            </label>
-            <label class="field">
-              <span>Branch name</span>
-              <input class="apply-input" name="branchName" type="text" />
-            </label>
-            <label class="field">
-              <span>Branch code</span>
-              <input class="apply-input" name="branchCode" type="text" />
-            </label>
-            <label class="field">
-              <span>Account number</span>
-              <input class="apply-input" name="accountNumber" type="text" autocomplete="off" />
-            </label>
-          </div>
-
-          <div class="apply-subhead"><p class="kicker">Address</p></div>
-          <div class="chip-row" role="group" aria-label="Residence">
-            <label class="chip">
-              <input type="radio" name="residence" value="Owned" checked />
-              Owned
-            </label>
-            <label class="chip">
-              <input type="radio" name="residence" value="Rented" />
-              Rented
-            </label>
-            <label class="chip">
-              <input type="radio" name="residence" value="Employer owned" />
-              Employer owned
-            </label>
-            <label class="chip">
-              <input type="radio" name="residence" value="Stay with parents" />
-              Stay with parents
-            </label>
-          </div>
-          <div class="apply-grid" style="margin-top: 1rem">
-            <label class="field field--full">
-              <span>Physical address</span>
-              <input class="apply-input" name="address" type="text" autocomplete="street-address" />
-            </label>
-            <label class="field">
-              <span>Years at current address</span>
-              <input class="apply-input" name="yearsAtAddress" type="text" />
-            </label>
-            <label class="field">
-              <span>Marital status</span>
-              <select class="apply-input" name="maritalStatus">
-                <option>Single</option>
-                <option>Married</option>
-                <option>Divorced</option>
-                <option>Widowed</option>
-              </select>
-            </label>
-          </div>
-
-          <p class="apply-status" data-step-status hidden></p>
-          <div class="apply-nav no-print">
-            <button class="btn btn--ghost" type="button" data-apply-back>Back</button>
-            <button class="btn btn--primary" type="button" data-apply-next>Continue</button>
-          </div>
-        </section>
-
-        <!-- ======================== STEP 2 ======================== -->
-        <section class="apply-step apply-card" data-step="2" hidden>
-          <p class="kicker">Step 2 of 5</p>
-          <h2>Employment</h2>
-          <p class="apply-card__lede">We'll use this to set up salary-deducted repayments.</p>
-
-          <label class="field">
-            <span>Employer</span>
-            <input class="apply-input" data-employer-display type="text" disabled />
-          </label>
-          <p class="note" data-employer-note style="margin: 0.75rem 0 1.1rem">
-            We'll confirm this with your employer's HR before disbursing funds.
-          </p>
-
-          <div class="apply-grid">
-            <label class="field">
-              <span>Employer contact person</span>
-              <input class="apply-input" name="employerContact" type="text" />
-            </label>
-            <label class="field">
-              <span>Employer telephone</span>
-              <input class="apply-input" name="employerTel" type="tel" />
-            </label>
-            <label class="field">
-              <span>Employee number</span>
-              <input class="apply-input" name="employeeNumber" type="text" />
-            </label>
-            <label class="field">
-              <span>Profession</span>
-              <input class="apply-input" name="profession" type="text" />
-            </label>
-            <label class="field">
-              <span>Date joined</span>
-              <input class="apply-input" name="dateJoined" type="date" />
-            </label>
-            <label class="field">
-              <span>Gross salary (USD)</span>
-              <input class="apply-input" name="grossSalary" type="number" min="0" step="0.01" />
-            </label>
-            <label class="field field--full">
-              <span>Net salary as per current payslip (USD)</span>
-              <input class="apply-input" name="netSalary" type="number" min="0" step="0.01" />
-            </label>
-          </div>
-
-          <div class="apply-subhead"><p class="kicker">Next of kin</p></div>
-          <div class="apply-grid">
-            <label class="field">
-              <span>First name</span>
-              <input class="apply-input" name="kinFirstName" type="text" />
-            </label>
-            <label class="field">
-              <span>Surname</span>
-              <input class="apply-input" name="kinSurname" type="text" />
-            </label>
-            <label class="field">
-              <span>Address</span>
-              <input class="apply-input" name="kinAddress" type="text" />
-            </label>
-            <label class="field">
-              <span>Phone</span>
-              <input class="apply-input" name="kinPhone" type="tel" value="+263 " />
-            </label>
-            <label class="field">
-              <span>Relationship</span>
-              <input class="apply-input" name="kinRelationship" type="text" />
-            </label>
-          </div>
-
-          <p class="apply-status" data-step-status hidden></p>
-          <div class="apply-nav no-print">
-            <button class="btn btn--ghost" type="button" data-apply-back>Back</button>
-            <button class="btn btn--primary" type="button" data-apply-next>Continue</button>
-          </div>
-        </section>
-
-        <!-- ======================== STEP 3 ======================== -->
-        <section class="apply-step apply-card" data-step="3" hidden>
-          <p class="kicker">Step 3 of 5</p>
-          <h2>Loan details</h2>
-          <p class="apply-card__lede">This quote is indicative, not a final offer.</p>
-
-          <div class="apply-grid">
-            <label class="field">
-              <span>School / institution</span>
-              <input class="apply-input" data-school-display type="text" disabled />
-            </label>
-            <label class="field">
-              <span>Purpose of loan</span>
-              <input class="apply-input" name="purpose" type="text" value="School fees" />
-            </label>
-            <label class="field">
-              <span>Requested loan amount (USD)</span>
-              <input class="apply-input" name="amount" type="number" min="1" step="0.01" placeholder="e.g. 1500" />
-            </label>
-            <label class="field">
-              <span>Loan period</span>
-              <select class="apply-input" name="months">
-                <option value="3">3 months</option>
-                <option value="6">6 months</option>
-                <option value="12" selected>12 months</option>
-                <option value="24">24 months</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="quote" data-quote style="margin-top: 1.25rem">
-            <p class="kicker">Indicative quote</p>
-            <dl>
-              <div class="row">
-                <dt>Interest rate <span class="field__hint">(per annum)</span></dt>
-                <dd>7.25%</dd>
-              </div>
-              <div class="row">
-                <dt>Establishment fee <span class="field__hint">(once-off)</span></dt>
-                <dd>1%</dd>
-              </div>
-              <div class="row">
-                <dt>Application fee <span class="field__hint">(once-off)</span></dt>
-                <dd>1%</dd>
-              </div>
-              <div class="row">
-                <dt>Insurance fee <span class="field__hint">(once-off)</span></dt>
-                <dd>1.2%</dd>
-              </div>
-              <div class="row">
-                <dt>Funds transfer fee <span class="field__hint">(once-off)</span></dt>
-                <dd>2%</dd>
-              </div>
-              <div class="row row--total">
-                <dt>Total repayable</dt>
-                <dd data-quote-total>—</dd>
-              </div>
-            </dl>
-            <div class="quote__monthly">
-              <span>Indicative monthly instalment over <span data-quote-months>12</span> months</span>
-              <strong data-quote-monthly>—</strong>
-            </div>
-            <p class="quote__disclaimer">This is an indicative estimate, not a final offer.</p>
-          </div>
-
-          <div class="docs" style="margin-top: 1rem">
-            <p class="kicker">Documents to have ready</p>
-            <ul>
-              <li>National ID or passport</li>
-              <li>Latest payslip</li>
-              <li>Confirmation of employment</li>
-            </ul>
-          </div>
-
-          <p class="apply-status" data-step-status hidden></p>
-          <div class="apply-nav no-print">
-            <button class="btn btn--ghost" type="button" data-apply-back>Back</button>
-            <button class="btn btn--primary" type="button" data-apply-next>Continue</button>
-          </div>
-        </section>
-
-        <!-- ======================== STEP 4 ======================== -->
-        <section class="apply-step apply-card" data-step="4" hidden>
-          <p class="kicker">Step 4 of 5</p>
-          <h2>Terms &amp; Acknowledgement of Debt</h2>
-          <p class="apply-card__lede">A plain-language summary of what you're agreeing to.</p>
-
-          <div class="terms">
-            <div>
-              <h3>Telling us if you change jobs</h3>
-              <p>If you leave or change your employer, let Diamond Bank know in writing straight away so repayment arrangements can be updated.</p>
-            </div>
-            <div>
-              <h3>Repayment by salary deduction</h3>
-              <p>You authorise your employer to deduct the agreed instalment from your salary each month and pay it over to Diamond Bank until the loan is settled.</p>
-            </div>
-            <div>
-              <h3>If payments are missed</h3>
-              <p>If an instalment is missed, the full outstanding balance may become due immediately and interest continues to run on what is owed.</p>
-            </div>
-            <div>
-              <h3>Fees and interest</h3>
-              <p>Interest and the establishment, application, insurance and transfer fees shown in your quote form part of the amount you repay.</p>
-            </div>
-            <div>
-              <h3>Collection and legal costs</h3>
-              <p>If recovery action becomes necessary, you agree to cover reasonable collection charges and legal costs on the attorney-and-client scale.</p>
-            </div>
-            <div>
-              <h3>No waiver</h3>
-              <p>If Diamond Bank allows extra time or relaxes a term once, that does not give up any of its rights under this agreement.</p>
-            </div>
-            <div>
-              <h3>Where disputes are heard</h3>
-              <p>You consent to any dispute being heard in the Magistrates' Court, without preventing Diamond Bank from approaching the High Court.</p>
-            </div>
-            <div>
-              <h3>Checking and sharing your information</h3>
-              <p>You allow Diamond Bank to verify the information you have given and to share it with banks and the Credit Bureau where necessary.</p>
-            </div>
-            <div>
-              <h3>The whole agreement</h3>
-              <p>This Acknowledgement of Debt, together with the loan agreement, is the complete agreement between you and Diamond Bank.</p>
-            </div>
-          </div>
-
-          <label class="agree" style="margin-top: 1rem">
-            <input type="checkbox" name="agreed" />
-            <span>I confirm the above is a true summary of the Diamond Bank Loan Agreement and Acknowledgement of Debt, and I agree to be bound by it.</span>
-          </label>
-
-          <div class="apply-subhead"><p class="kicker">Your signature</p></div>
-          <div class="apply-grid">
-            <label class="field">
-              <span>Client full name</span>
-              <input class="apply-input" data-full-name type="text" disabled />
-            </label>
-            <label class="field">
-              <span>Date</span>
-              <input class="apply-input" data-sign-date type="text" disabled />
-            </label>
-          </div>
-          <div class="signature" style="margin-top: 1rem">
-            <canvas data-signature aria-label="Signature pad"></canvas>
-            <div class="signature__meta">
-              <p>Sign above using your finger or mouse.</p>
-              <button class="signature__clear" type="button" data-signature-clear>Clear signature</button>
-            </div>
-          </div>
-
-          <p class="apply-status" data-step-status hidden></p>
-          <div class="apply-nav no-print">
-            <button class="btn btn--ghost" type="button" data-apply-back>Back</button>
-            <button class="btn btn--primary" type="button" data-apply-submit>Submit application</button>
-          </div>
-        </section>
-
-        <!-- ======================== STEP 5 ======================== -->
-        <section class="apply-step apply-card apply-success" data-step="5" hidden>
-          <span class="apply-success__mark" aria-hidden="true">✓</span>
-          <h2 data-success-parent>Application submitted</h2>
-          <h2 data-success-school hidden>Request received</h2>
-          <p>Thank you<span data-success-name></span>. Your reference number is below — keep it handy.</p>
-          <p class="apply-success__ref" data-reference></p>
-
-          <dl data-success-parent>
-            <div class="row">
-              <dt>School</dt>
-              <dd data-summary-school></dd>
-            </div>
-            <div class="row">
-              <dt>Employer</dt>
-              <dd data-summary-employer></dd>
-            </div>
-            <div class="row">
-              <dt>Requested amount</dt>
-              <dd data-summary-amount></dd>
-            </div>
-            <div class="row">
-              <dt>Tenure</dt>
-              <dd data-summary-tenure></dd>
-            </div>
-            <div class="row">
-              <dt>Indicative monthly instalment</dt>
-              <dd data-summary-monthly></dd>
-            </div>
-          </dl>
-
-          <dl data-success-school hidden>
-            <div class="row">
-              <dt>Institution</dt>
-              <dd data-summary-institution></dd>
-            </div>
-            <div class="row">
-              <dt>Contact person</dt>
-              <dd data-summary-contact></dd>
-            </div>
-            <div class="row">
-              <dt>Email</dt>
-              <dd data-summary-email></dd>
-            </div>
-            <div class="row">
-              <dt>Phone</dt>
-              <dd data-summary-phone></dd>
-            </div>
-            <div class="row">
-              <dt>Funding for</dt>
-              <dd data-summary-purpose></dd>
-            </div>
-          </dl>
-
-          <p data-success-parent>
-            Diamond Bank will contact you within 2 business days to verify your documents.
-          </p>
-          <p data-success-school hidden>
-            A dedicated Diamond Bank relationship manager will contact you within 2 business days to tailor terms for your institution.
-          </p>
-
-          <div class="apply-success__actions no-print">
-            <button class="btn btn--primary" type="button" data-print>Download summary</button>
-            <button class="btn btn--ghost" type="button" data-reset>Start another application</button>
-          </div>
-        </section>
-
-        <p class="apply-footnote no-print">
+        <p class="apply-footnote">
           Kleva × Diamond Bank · Indicative figures only. Lending subject to affordability and verification.
         </p>
-      </form>
+      </div>
     </main>
-
     <footer class="footer no-print">
       <div class="container footer__inner">
         <div class="footer__brand">
@@ -698,6 +176,5 @@
     </footer>
 
     <script src="/main.js" defer></script>
-    <script src="/loans/apply.js" defer></script>
   </body>
 </html>

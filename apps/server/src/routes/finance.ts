@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { z } from "zod";
-import { requireAuth, requireParent, type AuthenticatedRequest } from "../middleware/auth.js";
+import { requireAuth, requireFinance, type AuthenticatedRequest } from "../middleware/auth.js";
 import { db } from "../lib/db.js";
 
 export const financeRouter = Router();
 
-financeRouter.use("/finance", requireAuth, requireParent);
+financeRouter.use("/finance", requireAuth, requireFinance);
 
 function publicRef(prefix: string) {
   const n = Math.floor(1000 + Math.random() * 9000);

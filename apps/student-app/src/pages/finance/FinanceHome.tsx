@@ -31,7 +31,7 @@ const products = [
 ];
 
 export default function FinanceHome() {
-  const { activeChild, children } = useFamily();
+  const { activeChild, children, isInstitution } = useFamily();
 
   return (
     <div>
@@ -41,7 +41,7 @@ export default function FinanceHome() {
         {activeChild ? ` · Managing ${activeChild.name}` : ""}
       </p>
 
-      {children.length === 0 && (
+      {!isInstitution && children.length === 0 && (
         <div className="mt-6 rounded-2xl border border-dashed border-border bg-muted/30 p-5">
           <p className="text-sm font-medium">Invite a student to view their portal</p>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -135,7 +135,7 @@ export default function FinanceHome() {
               <p className="text-xs text-muted-foreground">Submit an education finance application to see it here.</p>
             </div>
             <Button asChild size="sm" className="ml-auto rounded-full">
-              <Link to="/finance/apply">Apply</Link>
+              <Link to={isInstitution ? "/finance/school" : "/finance/apply"}>Apply</Link>
             </Button>
           </div>
         </div>

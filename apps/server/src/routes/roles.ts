@@ -7,7 +7,7 @@ import { assignAccountRole } from "../lib/access.js";
 export const rolesRouter = Router();
 
 const assignRoleSchema = z.object({
-  role: z.enum(["student", "teacher", "parent"]),
+  role: z.enum(["student", "teacher", "parent", "institution"]),
 });
 
 rolesRouter.post("/roles", requireAuth, async (req: AuthenticatedRequest, res) => {

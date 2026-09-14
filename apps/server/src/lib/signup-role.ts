@@ -1,19 +1,21 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 
-const signupRole = new AsyncLocalStorage<"student" | "parent">();
+export type SignupRole = "student" | "parent" | "institution";
 
-export function runWithSignupRole(role: "student" | "parent", next: () => void) {
+const signupRole = new AsyncLocalStorage<SignupRole>();
+
+export function runWithSignupRole(role: SignupRole, next: () => void) {
   signupRole.run(role, next);
 }
 
-export function getSignupRole(): "student" | "parent" {
+export function getSignupRole(): SignupRole {
   return signupRole.getStore() ?? "student";
 }
 
 export function roleFromAuthRequest(req: {
   headers: { [key: string]: string | string[] | undefined };
   url?: string;
-}): "student" | "parent" {
+}): SignupRole {
   const header = String(req.headers["x-kleva-role"] ?? "").toLowerCase();
   let query = "";
   try {
@@ -21,5 +23,7 @@ export function roleFromAuthRequest(req: {
   } catch {
     query = "";
   }
-  return header === "parent" || query === "parent" ? "parent" : "student";
+  const value = header || query;
+  if (value === "parent" || value === "institution") return value;
+  return "student";
 }

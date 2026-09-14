@@ -157,7 +157,7 @@
   }
 
   .page-title {
-    @apply text-3xl font-semibold tracking-tight text-foreground;
+    @apply text-2xl font-semibold tracking-tight text-foreground sm:text-3xl;
   }
 
   .page-subtitle {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, type AccountRole } from "@/contexts/AuthContext";
 import { Button } from "@nudle/ui/button";
 import { Input } from "@nudle/ui/input";
 import { Label } from "@nudle/ui/label";
@@ -12,9 +12,20 @@ import klevaMark from "@/assets/kleva-mark.svg";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
+const ACCOUNT_TYPES: Array<{ id: AccountRole; label: string }> = [
+  { id: "student", label: "Student" },
+  { id: "parent", label: "Parent" },
+  { id: "institution", label: "Institution" },
+];
+
 function safeNext(path: string | null) {
   if (path && path.startsWith("/") && !path.startsWith("//")) return path;
   return null;
+}
+
+function roleFromQuery(role: string | null): AccountRole {
+  if (role === "parent" || role === "institution") return role;
+  return "student";
 }
 
 async function loadRoles() {
@@ -22,59 +33,83 @@ async function loadRoles() {
   return me.roles;
 }
 
+function defaultPath(role: AccountRole, created: boolean) {
+  if (role === "institution") return created ? "/finance/school" : "/finance/home";
+  if (role === "parent") return created ? "/family" : "/finance/home";
+  return "/";
+}
+
 export default function Auth() {
   const [params] = useSearchParams();
-  const initialRole = params.get("role") === "parent" ? "parent" : "student";
+  const initialRole = roleFromQuery(params.get("role"));
   const initialTab = params.get("tab") === "signup" ? "signup" : "signin";
   const redirectTo = safeNext(params.get("next"));
   const fromInvite = Boolean(redirectTo?.startsWith("/invite/"));
   const [email, setEmail] = useState(params.get("email") ?? "");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
-  const [accountType, setAccountType] = useState<"student" | "parent">(initialRole);
+  const [accountType, setAccountType] = useState<AccountRole>(initialRole);
   const [tab, setTab] = useState(initialTab);
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { user, loading, signIn, signUp } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
+    setAccountType(fromInvite ? "student" : roleFromQuery(params.get("role")));
     const fromQuery = params.get("email");
     if (fromQuery) setEmail(fromQuery);
-    if (fromInvite) setAccountType("student");
   }, [params, fromInvite]);
+
+  useEffect(() => {
+    if (loading || !user || !redirectTo) return;
+    navigate(redirectTo, { replace: true });
+  }, [loading, user, redirectTo, navigate]);
 
   const goAfterAuth = async (created: boolean) => {
     await queryClient.invalidateQueries({ queryKey: ["me"] });
-    const roles = await loadRoles();
-    const isParent = roles.includes("parent");
+    let roles = await loadRoles();
+
+    if (accountType === "parent" || accountType === "institution") {
+      if (!roles.includes(accountType)) {
+        await api.post("/api/roles", { role: accountType });
+        await queryClient.invalidateQueries({ queryKey: ["me"] });
+        roles = await loadRoles();
+      }
+      if (!roles.includes(accountType)) {
+        throw new Error(
+          accountType === "institution"
+            ? "Institution access could not be enabled for this account."
+            : "Parent access could not be enabled for this account.",
+        );
+      }
+    }
 
     if (redirectTo) {
       navigate(redirectTo);
       return;
     }
 
-    if (accountType === "parent" && !isParent) {
-      await api.post("/api/roles", { role: "parent" });
-      await queryClient.invalidateQueries({ queryKey: ["me"] });
-    }
-
-    const rolesAfter = accountType === "parent" && !isParent ? await loadRoles() : roles;
-    const parentNow = rolesAfter.includes("parent");
-
-    if (accountType === "parent" && !parentNow) {
-      throw new Error("Parent access could not be enabled for this account.");
-    }
-
-    if (accountType === "parent" || parentNow) {
+    if (accountType === "parent" || roles.includes("parent")) {
       toast({
         title: created ? "Parent account created" : "Welcome back!",
         description: created
           ? "Finance is ready. Invite a student from Family when you want to view their portal."
           : "Signed in to the parent portal.",
       });
-      navigate(created ? "/family" : "/finance/home");
+      navigate(defaultPath("parent", created));
+      return;
+    }
+
+    if (accountType === "institution" || roles.includes("institution")) {
+      toast({
+        title: created ? "Institution account created" : "Welcome back!",
+        description: created
+          ? "You can apply for school and infrastructure finance."
+          : "Signed in to the institution portal.",
+      });
+      navigate(defaultPath("institution", created));
       return;
     }
 
@@ -103,10 +138,10 @@ export default function Auth() {
       } catch (err) {
         toast({
           variant: "destructive",
-          title: "Could not open the parent portal",
-          description: err instanceof Error ? err.message : "Signed in, but parent access failed.",
+          title: "Could not finish sign in",
+          description: err instanceof Error ? err.message : "Signed in, but access could not be set.",
         });
-        navigate("/");
+        navigate(redirectTo || "/");
       }
     }
 
@@ -144,12 +179,33 @@ export default function Auth() {
       try {
         await goAfterAuth(true);
       } catch {
-        navigate(redirectTo || (accountType === "parent" ? "/family" : "/"));
+        navigate(redirectTo || defaultPath(accountType, true));
       }
     }
 
     setIsLoading(false);
   };
+
+  const heading =
+    accountType === "institution"
+      ? "Institution Portal"
+      : accountType === "parent"
+        ? "Parent Portal"
+        : "Student Portal";
+  const description =
+    accountType === "institution"
+      ? "Sign in to apply for school and infrastructure finance"
+      : accountType === "parent"
+        ? "Sign in to manage finances and your child's school portal"
+        : "Sign in to access your courses and assignments";
+
+  if (!loading && user && redirectTo) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
+        Continuing to your application…
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6">
@@ -160,34 +216,28 @@ export default function Auth() {
           </div>
           <div>
             <p className="text-sm font-medium tracking-wide text-muted-foreground">Kleva</p>
-            <CardTitle className="text-2xl font-semibold tracking-tight">
-              {accountType === "parent" ? "Parent Portal" : "Student Portal"}
-            </CardTitle>
-            <CardDescription className="mt-1.5">
-              {accountType === "parent"
-                ? "Sign in to manage finances and your child's school portal"
-                : "Sign in to access your courses and assignments"}
-            </CardDescription>
+            <CardTitle className="text-2xl font-semibold tracking-tight">{heading}</CardTitle>
+            <CardDescription className="mt-1.5">{description}</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="pt-4">
           {!fromInvite && (
             <div className="mb-5 space-y-2">
               <Label>Account type</Label>
-              <div className="grid grid-cols-2 gap-2">
-                {(["student", "parent"] as const).map((type) => (
+              <div className="grid grid-cols-3 gap-2">
+                {ACCOUNT_TYPES.map((type) => (
                   <button
-                    key={type}
+                    key={type.id}
                     type="button"
-                    onClick={() => setAccountType(type)}
+                    onClick={() => setAccountType(type.id)}
                     className={cn(
-                      "rounded-full border px-3 py-2 text-sm capitalize transition-colors",
-                      accountType === type
+                      "rounded-full border px-2 py-2 text-xs sm:text-sm transition-colors",
+                      accountType === type.id
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border hover:bg-muted",
                     )}
                   >
-                    {type}
+                    {type.label}
                   </button>
                 ))}
               </div>
@@ -237,11 +287,13 @@ export default function Auth() {
             <TabsContent value="signup" className="mt-6">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-name">Full Name</Label>
+                  <Label htmlFor="signup-name">
+                    {accountType === "institution" ? "Your name" : "Full Name"}
+                  </Label>
                   <Input
                     id="signup-name"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder={accountType === "institution" ? "Bursar or finance officer" : "John Doe"}
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     className="rounded-xl"
@@ -276,6 +328,12 @@ export default function Auth() {
                   <p className="text-xs text-muted-foreground">
                     After signing up, invite your student from Family. Finance is available right away
                     on your parent account.
+                  </p>
+                )}
+                {accountType === "institution" && (
+                  <p className="text-xs text-muted-foreground">
+                    After signing up you can apply for school fees bridging, working capital and
+                    infrastructure finance.
                   </p>
                 )}
                 <Button type="submit" className="w-full rounded-full" disabled={isLoading}>

@@ -96,8 +96,8 @@ export function SchoolStep({ onDone }: { onDone: (school: SelectedSchool) => voi
     <div className="mx-auto max-w-2xl">
       <h1 className="page-title">Choose the school</h1>
       <p className="page-subtitle mt-1">
-        Select the Zimbabwe primary or high school this loan is for. Fees are paid directly into
-        that school&apos;s account.
+        Select the Zimbabwe primary or high school. Fees are paid directly into that
+        school&apos;s account.
       </p>
 
       <div className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">

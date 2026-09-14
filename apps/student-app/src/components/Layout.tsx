@@ -12,7 +12,7 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-  const { isParent } = useFamily();
+  const { isParent, isInstitution } = useFamily();
 
   return (
     <SidebarProvider
@@ -21,9 +21,9 @@ export function Layout({ children }: LayoutProps) {
     >
       <div className="flex h-full min-h-0 w-full bg-background">
         <AppSidebar />
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden">
           <header className="relative z-20 h-16 shrink-0 border-b border-border bg-background">
-            <div className="mx-auto flex h-full w-full max-w-7xl items-center gap-4 px-5 md:px-8">
+            <div className="mx-auto flex h-full w-full max-w-7xl items-center gap-3 px-5 sm:gap-4 sm:px-6 md:px-8">
               <MobileSidebarTrigger />
 
               <div className="min-w-0 flex-1 max-w-xl">
@@ -31,9 +31,11 @@ export function Layout({ children }: LayoutProps) {
                   <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder={
-                      isParent
-                        ? "Search courses, fees, or applications…"
-                        : "Search courses, assignments, or resources…"
+                      isInstitution
+                        ? "Search applications or school finance…"
+                        : isParent
+                          ? "Search courses, fees, or applications…"
+                          : "Search courses, assignments, or resources…"
                     }
                     className="pl-10 h-10 rounded-full bg-card border-border/70 shadow-sm"
                   />
@@ -49,8 +51,10 @@ export function Layout({ children }: LayoutProps) {
               </div>
             </div>
           </header>
-          <main className="min-h-0 flex-1 overflow-y-auto">
-            <div className="max-w-7xl mx-auto w-full p-5 md:p-8 space-y-6">{children}</div>
+          <main className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-x-none touch-pan-y">
+            <div className="mx-auto w-full min-w-0 max-w-7xl space-y-6 px-5 py-5 pb-10 sm:px-6 md:p-8">
+              {children}
+            </div>
           </main>
         </div>
       </div>

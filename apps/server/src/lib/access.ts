@@ -8,7 +8,7 @@ export async function userHasRole(userId: string, role: string) {
 
 export async function assignAccountRole(
   userId: string,
-  role: "student" | "teacher" | "parent",
+  role: "student" | "teacher" | "parent" | "institution",
 ) {
   const existing = await db("user_roles").where({ user_id: userId, role }).first();
   if (!existing) {
@@ -21,8 +21,11 @@ export async function assignAccountRole(
     });
   }
 
-  if (role === "parent") {
+  if (role === "parent" || role === "institution") {
     await db("user_roles").where({ user_id: userId, role: "student" }).delete();
+  }
+
+  if (role === "parent") {
     const profile = await db("parent_profiles").where({ user_id: userId }).first();
     if (!profile) {
       await db("parent_profiles").insert({ user_id: userId });
