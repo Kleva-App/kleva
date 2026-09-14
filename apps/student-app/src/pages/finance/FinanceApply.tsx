@@ -6,6 +6,7 @@ import {
   ChevronRight,
   Clock,
   FileText,
+  GraduationCap,
   Loader2,
 } from "lucide-react";
 import { useState } from "react";
@@ -25,7 +26,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@nudle/ui/select";
+import { SchoolAccountCard } from "@/components/finance/SchoolAccountCard";
+import { SchoolStep } from "@/components/finance/SchoolStep";
 import { EMPLOYERS } from "@/lib/employers";
+import { schoolLevelLabel, type SelectedSchool } from "@/lib/zimbabwe-schools";
 import { wait } from "@/lib/parent-account";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -65,6 +69,7 @@ export default function FinanceApply() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { activeChild } = useFamily();
+  const [school, setSchool] = useState<SelectedSchool | null>(null);
   const [employer, setEmployer] = useState<SelectedEmployer | null>(null);
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<Form>({});
@@ -88,6 +93,7 @@ export default function FinanceApply() {
         studentId: activeChild?.id,
         product: "Education Finance",
         amount: form.amount || "0",
+        school,
         employer,
         form,
         hasIdFront: Boolean(idFront),
@@ -125,8 +131,21 @@ export default function FinanceApply() {
     );
   }
 
+  if (!school) {
+    return <SchoolStep onDone={setSchool} />;
+  }
+
   if (!employer) {
-    return <EmployerStep onDone={setEmployer} />;
+    return (
+      <div>
+        <div className="mx-auto max-w-2xl">
+          <ChosenSchoolBar school={school} onChange={() => setSchool(null)} />
+        </div>
+        <div className="mt-4">
+          <EmployerStep onDone={setEmployer} />
+        </div>
+      </div>
+    );
   }
 
   const canContinue = step === 2 ? agreed && Boolean(signature) && Boolean(idFront) : true;
@@ -138,23 +157,26 @@ export default function FinanceApply() {
         Step {step + 1} of 4 · {steps[step]}
       </p>
 
-      <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm shadow-sm">
-        <Building2 className="h-4 w-4 text-primary" />
-        <span className="font-medium text-foreground">{employer.name}</span>
-        <span className="text-xs text-muted-foreground">{employer.sector}</span>
-        {employer.pending && (
-          <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700">
-            <Clock className="h-3 w-3" /> Awaiting employer approval
-          </span>
-        )}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="ml-auto rounded-full text-xs"
-          onClick={() => setEmployer(null)}
-        >
-          Change employer
-        </Button>
+      <div className="mt-4 space-y-2">
+        <ChosenSchoolBar school={school} onChange={() => setSchool(null)} />
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm shadow-sm">
+          <Building2 className="h-4 w-4 text-primary" />
+          <span className="font-medium text-foreground">{employer.name}</span>
+          <span className="text-xs text-muted-foreground">{employer.sector}</span>
+          {employer.pending && (
+            <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700">
+              <Clock className="h-3 w-3" /> Awaiting employer approval
+            </span>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="ml-auto rounded-full text-xs"
+            onClick={() => setEmployer(null)}
+          >
+            Change employer
+          </Button>
+        </div>
       </div>
 
       <div className="mt-6 flex items-center gap-2">
@@ -271,7 +293,17 @@ export default function FinanceApply() {
         )}
 
         {step === 3 && (
-          <div className="space-y-3">
+            <div className="space-y-3">
+              <SchoolAccountCard school={school} />
+              <div className="rounded-xl border border-border px-4 py-3">
+                <p className="text-sm font-medium text-foreground">School</p>
+                <p className="mt-1 text-sm text-foreground">{school.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {schoolLevelLabel(school.level)}
+                  {school.district ? ` · ${school.district}` : ""}
+                  {school.province ? `, ${school.province}` : ""}
+                </p>
+              </div>
             <SummarySection title="Personal & Employment Details" fields={personalFields} form={form} />
             <SummarySection title="Loan Details" fields={loanFields} form={form} />
             <Collapsible>
@@ -425,6 +457,35 @@ const newEmployerFields: Array<[string, string, string]> = [
   ["empPhone", "HR contact phone", "tel"],
   ["empStaffNo", "Your employee / staff number", "text"],
 ];
+
+function ChosenSchoolBar({
+  school,
+  onChange,
+}: {
+  school: SelectedSchool;
+  onChange: () => void;
+}) {
+  return (
+    <div className="rounded-xl border border-border bg-card px-4 py-3 text-sm shadow-sm">
+      <div className="flex flex-wrap items-center gap-3">
+        <GraduationCap className="h-4 w-4 text-primary" />
+        <span className="font-medium text-foreground">{school.name}</span>
+        <span className="text-xs text-muted-foreground">
+          {schoolLevelLabel(school.level)}
+          {school.district ? ` · ${school.district}` : ""}
+          {school.province ? `, ${school.province}` : ""}
+        </span>
+        <Button variant="ghost" size="sm" className="ml-auto rounded-full text-xs" onClick={onChange}>
+          Change school
+        </Button>
+      </div>
+      <p className="mt-2 pl-7 text-xs text-muted-foreground">
+        {school.bank} · {school.accountNumber}
+        {school.accountName ? ` · ${school.accountName}` : ""}
+      </p>
+    </div>
+  );
+}
 
 function EmployerStep({ onDone }: { onDone: (e: SelectedEmployer) => void }) {
   const [choice, setChoice] = useState<string>("");

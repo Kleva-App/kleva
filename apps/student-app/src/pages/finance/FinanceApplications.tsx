@@ -24,6 +24,14 @@ type Application = {
   submitted: string;
   status: Status;
   note: string;
+  school?: {
+    name: string;
+    level: string;
+    province: string;
+    district: string;
+    bank?: string;
+    accountNumber?: string;
+  } | null;
   progress?: { paid: number; total: number };
 };
 
@@ -189,6 +197,20 @@ export default function FinanceApplications() {
                         </span>
                       </div>
                       <p className="mt-0.5 text-sm text-muted-foreground">{a.facility}</p>
+                      {a.school?.name && (
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {a.school.name}
+                          {a.school.level === "primary"
+                            ? " · Primary"
+                            : a.school.level === "secondary"
+                              ? " · High school"
+                              : ""}
+                          {a.school.province ? ` · ${a.school.province}` : ""}
+                          {a.school.bank && a.school.accountNumber
+                            ? ` · ${a.school.bank} ${a.school.accountNumber}`
+                            : ""}
+                        </p>
+                      )}
                       <p className="mt-1 text-xs text-muted-foreground">
                         Ref {a.publicRef} · Submitted {submittedLabel}
                       </p>

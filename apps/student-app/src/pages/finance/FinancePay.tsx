@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
-  Building2,
   CreditCard,
   GraduationCap,
   Landmark,
@@ -10,20 +9,18 @@ import {
   Smartphone,
   Sparkles,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@nudle/ui/button";
 import { Input } from "@nudle/ui/input";
 import { Label } from "@nudle/ui/label";
+import { SchoolAccountCard } from "@/components/finance/SchoolAccountCard";
+import { SchoolPicker } from "@/components/finance/SchoolPicker";
 import { wait } from "@/lib/parent-account";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import { useFamily } from "@/contexts/FamilyContext";
 import { useToast } from "@nudle/ui/use-toast";
-
-const schools = [
-  { id: "kleva-high", name: "Kleva High School", account: "•••• 7742", bank: "Scotiabank" },
-  { id: "kleva-primary", name: "Kleva Primary School", account: "•••• 1183", bank: "Scotiabank" },
-];
+import { formatSchoolAccount, loadZimbabweSchools, type ZimbabweSchool } from "@/lib/zimbabwe-schools";
 
 const methods = [
   {
@@ -71,7 +68,8 @@ type PaymentRecord = {
 };
 
 export default function FinancePay() {
-  const [schoolId, setSchoolId] = useState(schools[0]!.id);
+  const [schools, setSchools] = useState<ZimbabweSchool[]>([]);
+  const [schoolId, setSchoolId] = useState("");
   const [term, setTerm] = useState("Term 3 · 2026 tuition");
   const [amount, setAmount] = useState("450");
   const [method, setMethod] = useState<MethodId>("card");
@@ -81,7 +79,27 @@ export default function FinancePay() {
   const { toast } = useToast();
   const { activeChild } = useFamily();
 
-  const school = schools.find((s) => s.id === schoolId)!;
+  useEffect(() => {
+    let cancelled = false;
+    loadZimbabweSchools()
+      .then((list) => {
+        if (!cancelled) setSchools(list);
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          toast({
+            variant: "destructive",
+            title: "Could not load schools",
+            description: err instanceof Error ? err.message : "Please try again",
+          });
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const school = schools.find((s) => s.id === schoolId) ?? null;
   const selected = methods.find((m) => m.id === method)!;
   const value = Number(amount) || 0;
   const fee = Math.round(value * (selected.fee / 100) * 100) / 100;
@@ -90,6 +108,7 @@ export default function FinancePay() {
   const set = (k: string, v: string) => setFields((f) => ({ ...f, [k]: v }));
 
   const canPay =
+    Boolean(school) &&
     value > 0 &&
     (method === "card"
       ? (fields.cardNumber ?? "").length >= 12 &&
@@ -100,6 +119,7 @@ export default function FinancePay() {
         : true);
 
   async function pay() {
+    if (!school) return;
     setBusy(true);
     if (method === "zikimall") {
       window.open("https://zikimall.com/", "_blank", "noopener,noreferrer");
@@ -122,7 +142,7 @@ export default function FinancePay() {
         fee,
         method: selected.title,
         school: school.name,
-        account: `${school.bank} ${school.account}`,
+        account: formatSchoolAccount(school),
         purpose: term || "—",
         prefix: "KLV",
       });
@@ -188,31 +208,22 @@ export default function FinancePay() {
         <div className="space-y-6">
           <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
             <h2 className="text-sm font-semibold text-foreground">School account</h2>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              {schools.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => setSchoolId(s.id)}
-                  className={cn(
-                    "flex items-start gap-3 rounded-xl border p-4 text-left transition-colors",
-                    s.id === schoolId
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/40",
-                  )}
-                >
-                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <Building2 className="h-4 w-4" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-medium text-foreground">{s.name}</span>
-                    <span className="block text-xs text-muted-foreground">
-                      {s.bank} · {s.account}
-                    </span>
-                  </span>
-                </button>
-              ))}
-            </div>
+            {schools.length === 0 ? (
+              <p className="mt-4 text-sm text-muted-foreground">Loading schools…</p>
+            ) : (
+              <div className="mt-4">
+                <SchoolPicker
+                  schools={schools}
+                  selectedId={schoolId}
+                  onSelect={(s) => setSchoolId(s.id)}
+                />
+              </div>
+            )}
+            {school && (
+              <div className="mt-4">
+                <SchoolAccountCard school={school} />
+              </div>
+            )}
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
@@ -331,9 +342,15 @@ export default function FinancePay() {
 
               {method === "bank" && (
                 <div className="rounded-xl bg-muted/50 p-4 text-sm text-muted-foreground">
-                  Transfer to {school.bank} account {school.account} for {school.name}. Use reference{" "}
-                  <span className="font-medium text-foreground">{term}</span>. We&apos;ll confirm the
-                  payment once the transfer clears.
+                  {school ? (
+                    <>
+                      Transfer to {school.bank} account {school.accountNumber} for {school.name}.
+                      Use reference <span className="font-medium text-foreground">{term}</span>.
+                      We&apos;ll confirm the payment once the transfer clears.
+                    </>
+                  ) : (
+                    <>Select a school to see the account to transfer to.</>
+                  )}
                 </div>
               )}
 
@@ -358,8 +375,8 @@ export default function FinancePay() {
         <aside className="h-fit rounded-2xl border border-border bg-card p-6 shadow-sm">
           <h2 className="text-sm font-semibold text-foreground">Summary</h2>
           <dl className="mt-4 space-y-2 text-sm">
-            <Row label="School" value={school.name} />
-            <Row label="Account" value={`${school.bank} ${school.account}`} />
+            <Row label="School" value={school?.name ?? "—"} />
+            <Row label="Account" value={school ? formatSchoolAccount(school) : "—"} />
             <Row label="Purpose" value={term || "—"} />
             <Row label="Amount" value={`$${value.toFixed(2)}`} />
             <Row label="Processing fee" value={`$${fee.toFixed(2)}`} />

@@ -19,6 +19,14 @@ function mapApplication(row: {
   facility: string;
   amount: string;
   status: string;
+  school_id: string | null;
+  school_name: string | null;
+  school_level: string | null;
+  school_province: string | null;
+  school_district: string | null;
+  school_bank: string | null;
+  school_account_name: string | null;
+  school_account_number: string | null;
   employer_name: string | null;
   employer_sector: string | null;
   employer_pending: boolean;
@@ -38,6 +46,18 @@ function mapApplication(row: {
     facility: row.facility,
     amount: row.amount,
     status: row.status,
+    school: row.school_name
+      ? {
+          id: row.school_id,
+          name: row.school_name,
+          level: row.school_level ?? "",
+          province: row.school_province ?? "",
+          district: row.school_district ?? "",
+          bank: row.school_bank ?? "",
+          accountName: row.school_account_name ?? "",
+          accountNumber: row.school_account_number ?? "",
+        }
+      : null,
     employer: row.employer_name
       ? {
           name: row.employer_name,
@@ -74,6 +94,17 @@ const createApplicationSchema = z.object({
   product: z.string().min(1).default("Education Finance"),
   facility: z.string().min(1).optional(),
   amount: z.string().min(1).default("0"),
+  school: z.object({
+    id: z.string().min(1).nullable().optional(),
+    name: z.string().min(1),
+    level: z.enum(["primary", "secondary"]),
+    province: z.string().optional(),
+    district: z.string().optional(),
+    bank: z.string().optional(),
+    branch: z.string().optional(),
+    accountName: z.string().optional(),
+    accountNumber: z.string().optional(),
+  }),
   employer: z
     .object({
       name: z.string().min(1),
@@ -110,7 +141,13 @@ financeRouter.post("/finance/applications", async (req: AuthenticatedRequest, re
       "Education finance";
 
     const employerName = body.employer?.name;
-    const note = employerNote(employerName, Boolean(body.employer?.pending));
+    const note = applicationNote(
+      body.school.name,
+      body.school.bank,
+      body.school.accountNumber,
+      employerName,
+      Boolean(body.employer?.pending),
+    );
 
     const instalmentsTotal = tenureMonths(body.form.tenure);
 
@@ -123,6 +160,14 @@ financeRouter.post("/finance/applications", async (req: AuthenticatedRequest, re
         facility,
         amount: body.amount.replace(/^\$/, ""),
         status: "Under Review",
+        school_id: body.school.id ?? null,
+        school_name: body.school.name,
+        school_level: body.school.level,
+        school_province: body.school.province ?? "",
+        school_district: body.school.district ?? "",
+        school_bank: body.school.bank ?? null,
+        school_account_name: body.school.accountName ?? null,
+        school_account_number: body.school.accountNumber ?? null,
         employer_name: body.employer?.name ?? null,
         employer_sector: body.employer?.sector ?? null,
         employer_pending: Boolean(body.employer?.pending),
@@ -148,14 +193,24 @@ financeRouter.post("/finance/applications", async (req: AuthenticatedRequest, re
   }
 });
 
-function employerNote(name: string | undefined, pending: boolean) {
-  if (pending && name) {
-    return `Documents received. ${name} is awaiting employer accreditation.`;
+function applicationNote(
+  schoolName: string,
+  bank: string | undefined,
+  accountNumber: string | undefined,
+  employerName: string | undefined,
+  pending: boolean,
+) {
+  const dest =
+    bank && accountNumber
+      ? `Loan for ${schoolName}, paid to ${bank} ${accountNumber}.`
+      : `Loan for ${schoolName}.`;
+  if (pending && employerName) {
+    return `Documents received. ${dest} ${employerName} is awaiting employer accreditation.`;
   }
-  if (name) {
-    return `Documents received. Awaiting employer confirmation from ${name}.`;
+  if (employerName) {
+    return `Documents received. ${dest} Awaiting employer confirmation from ${employerName}.`;
   }
-  return "Documents received. Your application is with Blue Finance for review.";
+  return `Documents received. ${dest} Your application is with Blue Finance for review.`;
 }
 
 function tenureMonths(tenure: string | undefined) {
