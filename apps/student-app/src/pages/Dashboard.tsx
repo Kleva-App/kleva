@@ -16,6 +16,7 @@ import { useFamily } from "@/contexts/FamilyContext";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { useSchoolPortalHidden } from "@/components/ParentOnly";
 import { ZikimallBanner } from "@/components/ZikimallBanner";
 
 const kpiWells = [
@@ -34,6 +35,7 @@ function greetingForHour(hour: number) {
 export default function Dashboard() {
   const { user } = useAuth();
   const { isParent, activeChild, children } = useFamily();
+  const { hidden: schoolPortalHidden } = useSchoolPortalHidden();
   const firstName = user?.name?.split(" ")[0] || (isParent ? "Parent" : "Student");
   const greeting = greetingForHour(new Date().getHours());
   const { data: invitations = [] } = useQuery({
@@ -167,7 +169,7 @@ export default function Dashboard() {
         </div>
       ) : null}
 
-      <ZikimallBanner />
+      {!schoolPortalHidden && <ZikimallBanner />}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map((kpi, i) => (

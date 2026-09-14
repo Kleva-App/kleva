@@ -30,15 +30,24 @@ export function FinanceAccess({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+/** School pages are hidden for institutions and parents until a student is linked. */
+export function useSchoolPortalHidden() {
+  const { isParent, isInstitution, children: linked, loading } = useFamily();
+  return {
+    loading,
+    hidden: (isParent || isInstitution) && linked.length === 0,
+  };
+}
+
 /** School portal pages — hidden from parents/institutions until they have a linked student. */
 export function RequiresLinkedStudent({ children }: { children: React.ReactNode }) {
-  const { isParent, isInstitution, children: linked, loading } = useFamily();
+  const { hidden, loading } = useSchoolPortalHidden();
 
   if (loading) {
     return <>{children}</>;
   }
 
-  if ((isParent || isInstitution) && linked.length === 0) {
+  if (hidden) {
     return <Navigate to="/finance/home" replace />;
   }
 

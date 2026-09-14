@@ -192,7 +192,12 @@ function ZikicashSlide() {
 }
 
 function CbzPartnershipSlide() {
-  const { isParent } = useFamily();
+  const { isParent, isInstitution } = useFamily();
+  const financeCta = isInstitution
+    ? { to: "/finance/school", label: "Explore school finance" }
+    : isParent
+      ? { to: "/finance/home", label: "Explore finance" }
+      : null;
 
   return (
     <section className="relative isolate flex h-full min-h-[320px] w-full flex-col overflow-hidden bg-[#071A33] text-white md:min-h-[360px]">
@@ -229,12 +234,12 @@ function CbzPartnershipSlide() {
           finance, and bank with Zimbabwe&apos;s trusted name, all from one place.
         </p>
 
-        {isParent ? (
+        {financeCta ? (
           <Link
-            to="/finance/home"
+            to={financeCta.to}
             className="mt-7 inline-flex h-11 w-fit cursor-pointer items-center justify-center rounded-full bg-[#D4A017] px-7 text-sm font-semibold text-[#071A33] transition-colors hover:bg-[#e0b122]"
           >
-            Explore finance
+            {financeCta.label}
           </Link>
         ) : (
           <p className="mt-7 text-sm text-white/70">Available on parent accounts in Kleva Finance.</p>

@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Building2, CreditCard, GraduationCap, Store, Truck, Zap } from "lucide-react";
 import { Button } from "@nudle/ui/button";
+import { useSchoolPortalHidden } from "@/components/ParentOnly";
+import { ZikimallBanner } from "@/components/ZikimallBanner";
 import { useFamily } from "@/contexts/FamilyContext";
 
 const products = [
@@ -32,6 +34,8 @@ const products = [
 
 export default function FinanceHome() {
   const { activeChild, children, isInstitution } = useFamily();
+  const { hidden: schoolPortalHidden, loading } = useSchoolPortalHidden();
+  const showAds = !loading && schoolPortalHidden;
 
   return (
     <div>
@@ -40,6 +44,12 @@ export default function FinanceHome() {
         Powered by Blue Finance
         {activeChild ? ` · Managing ${activeChild.name}` : ""}
       </p>
+
+      {showAds && (
+        <div className="mt-6">
+          <ZikimallBanner />
+        </div>
+      )}
 
       {!isInstitution && children.length === 0 && (
         <div className="mt-6 rounded-2xl border border-dashed border-border bg-muted/30 p-5">
