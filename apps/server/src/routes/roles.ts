@@ -8,7 +8,15 @@ export const rolesRouter = Router();
 
 const assignRoleSchema = z.object({
   role: z
-    .enum(["student", "teacher", "parent", "organization", "institution", "organisation"])
+    .enum([
+      "student",
+      "teacher",
+      "parent",
+      "organization",
+      "institution",
+      "organisation",
+      "school_admin",
+    ])
     .transform((role) =>
       role === "institution" || role === "organisation" ? "organization" : role,
     ),

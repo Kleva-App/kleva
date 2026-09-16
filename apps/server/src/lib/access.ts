@@ -1,11 +1,23 @@
 import { db } from "./db.js";
 import { DEFAULT_SCHOOL_ID, schoolById, type School } from "./schools.js";
 
-export type AccountRole = "student" | "teacher" | "parent" | "organization";
+export type AccountRole =
+  | "student"
+  | "teacher"
+  | "parent"
+  | "organization"
+  | "school_admin";
 
 export function normalizeAccountRole(value: string): AccountRole | null {
   const role = value.toLowerCase();
-  if (role === "student" || role === "teacher" || role === "parent") return role;
+  if (
+    role === "student" ||
+    role === "teacher" ||
+    role === "parent" ||
+    role === "school_admin"
+  ) {
+    return role;
+  }
   if (role === "organization" || role === "organisation" || role === "institution") {
     return "organization";
   }
@@ -55,7 +67,7 @@ export async function assignAccountRole(userId: string, role: AccountRole) {
     });
   }
 
-  if (role === "parent" || role === "organization") {
+  if (role === "parent" || role === "organization" || role === "school_admin") {
     await db("user_roles").where({ user_id: userId, role: "student" }).delete();
   }
 
@@ -101,15 +113,17 @@ export async function getParentChildren(parentId: string): Promise<LinkedChild[]
     )
     .orderBy("u.name");
 
-  return rows.map((row) => ({
-    id: row.id,
-    email: row.email,
-    name: row.name,
-    image: row.image ?? null,
-    relationship: row.relationship,
-    linkId: row.link_id,
-    school: schoolById(row.school_id),
-  }));
+  return Promise.all(
+    rows.map(async (row) => ({
+      id: row.id,
+      email: row.email,
+      name: row.name,
+      image: row.image ?? null,
+      relationship: row.relationship,
+      linkId: row.link_id,
+      school: await schoolById(row.school_id),
+    })),
+  );
 }
 
 export async function isCourseTeacher(courseId: string, userId: string) {

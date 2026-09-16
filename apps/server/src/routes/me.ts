@@ -59,7 +59,7 @@ meRouter.get("/me", requireAuth, async (req: AuthenticatedRequest, res) => {
       preferences: normalizePreferences(row?.preferences),
       children,
       parentProfile,
-      school: schoolById(row?.school_id),
+      school: await schoolById(row?.school_id),
     });
   } catch (err) {
     res.status(500).json({

@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { normalizeAccountRole } from "./access.js";
 
-export type SignupRole = "student" | "parent" | "organization";
+export type SignupRole = "student" | "parent" | "organization" | "school_admin";
 
 const signupRole = new AsyncLocalStorage<SignupRole>();
 
@@ -26,6 +26,6 @@ export function roleFromAuthRequest(req: {
   }
   const value = header || query;
   const role = normalizeAccountRole(value);
-  if (role === "parent" || role === "organization") return role;
+  if (role === "parent" || role === "organization" || role === "school_admin") return role;
   return "student";
 }

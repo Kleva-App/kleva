@@ -82,3 +82,26 @@ export async function requireFinance(
     });
   }
 }
+
+export async function requireSchoolAdmin(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    if (!req.user?.id) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const ok = await userHasRole(req.user.id, "school_admin");
+    if (!ok) {
+      res.status(403).json({ error: "School admin access required" });
+      return;
+    }
+    next();
+  } catch (err) {
+    res.status(500).json({
+      error: err instanceof Error ? err.message : "Failed to verify school admin role",
+    });
+  }
+}

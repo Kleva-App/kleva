@@ -43,7 +43,7 @@ export function ProfileMenu({
   const { data: me } = useMe();
   const [signOutOpen, setSignOutOpen] = useState(false);
 
-  const name = me?.profile?.full_name || me?.email || "Teacher";
+  const name = me?.profile?.full_name || me?.email || "Educator";
   const email = me?.profile?.email || me?.email || "";
   const initial = name.charAt(0).toUpperCase();
 

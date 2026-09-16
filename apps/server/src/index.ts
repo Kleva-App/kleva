@@ -20,6 +20,7 @@ import { parentRouter } from "./routes/parent.js";
 import { invitationsRouter } from "./routes/invitations.js";
 import { emailPreviewRouter } from "./routes/email-preview.js";
 import { financeRouter } from "./routes/finance.js";
+import { schoolAdminRouter } from "./routes/school-admin.js";
 
 const app = express();
 const port = Number(getOptionalEnv("PORT", "3001"));
@@ -55,6 +56,7 @@ app.use("/api", parentRouter);
 app.use("/api", invitationsRouter);
 app.use("/api", emailPreviewRouter);
 app.use("/api", financeRouter);
+app.use("/api", schoolAdminRouter);
 app.use("/api", aiRouter);
 
 app.get("/", (_req, res) => {
