@@ -67,12 +67,13 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        'sm': 'var(--shadow-sm)',
-        'md': 'var(--shadow-md)',
-        'lg': 'var(--shadow-lg)',
-        'xl': 'var(--shadow-xl)',
-        'fluent': 'var(--shadow-md)',
-        'fluent-lg': 'var(--shadow-lg)',
+        sm: "var(--shadow-sm)",
+        md: "var(--shadow-md)",
+        lg: "var(--shadow-lg)",
+        xl: "var(--shadow-xl)",
+        card: "var(--shadow-card)",
+        fluent: "var(--shadow-md)",
+        "fluent-lg": "var(--shadow-lg)",
       },
       keyframes: {
         "accordion-down": {

@@ -6,6 +6,7 @@ import { Button } from "@nudle/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ProfileMenu } from "@/components/ProfileMenu";
 import { useFamily } from "@/contexts/FamilyContext";
+import { PageShell } from "@nudle/ui/page-shell";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -23,7 +24,7 @@ export function Layout({ children }: LayoutProps) {
         <AppSidebar />
         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden">
           <header className="relative z-20 h-16 shrink-0 border-b border-border bg-background">
-            <div className="mx-auto flex h-full w-full max-w-7xl items-center gap-3 px-5 sm:gap-4 sm:px-6 md:px-8">
+            <PageShell variant="bar" className="flex h-full items-center gap-3 sm:gap-4">
               <MobileSidebarTrigger />
 
               <div className="min-w-0 flex-1 max-w-xl">
@@ -43,18 +44,16 @@ export function Layout({ children }: LayoutProps) {
               </div>
 
               <div className="ml-auto flex shrink-0 items-center gap-2">
-                <Button variant="outline" size="icon" className="rounded-full">
+                <Button variant="outline" size="icon">
                   <Bell className="h-4 w-4" />
                 </Button>
                 <ThemeToggle compact />
                 <ProfileMenu />
               </div>
-            </div>
+            </PageShell>
           </header>
           <main className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-x-none touch-pan-y">
-            <div className="mx-auto w-full min-w-0 max-w-7xl space-y-6 px-5 py-5 pb-10 sm:px-6 md:p-8">
-              {children}
-            </div>
+            <PageShell>{children}</PageShell>
           </main>
         </div>
       </div>
@@ -70,7 +69,7 @@ function MobileSidebarTrigger() {
       type="button"
       variant="ghost"
       size="icon"
-      className="rounded-full md:hidden"
+      className="md:hidden"
       onClick={toggleSidebar}
       aria-label="Open sidebar"
     >

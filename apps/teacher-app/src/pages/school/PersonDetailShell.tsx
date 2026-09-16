@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@nudle/ui/tabs";
 import { Button } from "@nudle/ui/button";
+import { SurfaceCard } from "@nudle/ui/surface-card";
+import { StatGrid } from "@nudle/ui/stat-card";
 import { cn } from "@/lib/utils";
 import { StatusPill } from "@/pages/school/shared";
 
@@ -34,14 +36,14 @@ export function PersonDetailShell({
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <Button asChild variant="ghost" className="rounded-full -ml-2 mb-3 h-9 px-3 text-muted-foreground">
+        <Button asChild variant="ghost" className="-ml-2 mb-3 h-9 px-3 text-muted-foreground">
           <Link to={backTo}>
             <ArrowLeft className="h-4 w-4 mr-1.5" />
             {backLabel}
           </Link>
         </Button>
 
-        <div className="surface-card p-5 md:p-6">
+        <SurfaceCard className="p-5 md:p-6">
           <div className="flex items-start gap-4 flex-wrap">
             <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center text-lg font-semibold shrink-0">
               {initials}
@@ -64,7 +66,7 @@ export function PersonDetailShell({
               </div>
             </div>
           </div>
-        </div>
+        </SurfaceCard>
       </div>
 
       <Tabs defaultValue={defaultTab} className="space-y-4">
@@ -101,13 +103,13 @@ export function DetailSection({
   className?: string;
 }) {
   return (
-    <div className={cn("surface-card p-5 md:p-6 space-y-4", className)}>
+    <SurfaceCard className={cn("p-5 md:p-6 space-y-4", className)}>
       <div>
         <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
         {subtitle ? <p className="page-subtitle mt-0.5">{subtitle}</p> : null}
       </div>
       {children}
-    </div>
+    </SurfaceCard>
   );
 }
 
@@ -116,25 +118,7 @@ export function DetailStatGrid({
 }: {
   items: { label: string; value: string; tone?: "good" | "warn" | "bad" | "default" }[];
 }) {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {items.map((item) => (
-        <div key={item.label} className="rounded-xl border border-border/50 px-3.5 py-3">
-          <p className="text-xs text-muted-foreground mb-1">{item.label}</p>
-          <p
-            className={cn(
-              "text-xl font-semibold tabular-nums",
-              item.tone === "good" && "metric-good",
-              item.tone === "warn" && "metric-warn",
-              item.tone === "bad" && "metric-bad",
-            )}
-          >
-            {item.value}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
+  return <StatGrid items={items} />;
 }
 
 export { StatusPill };

@@ -57,7 +57,12 @@
     "./toaster": "./src/toaster.tsx",
     "./toggle-group": "./src/toggle-group.tsx",
     "./toggle": "./src/toggle.tsx",
-    "./tooltip": "./src/tooltip.tsx"
+    "./tooltip": "./src/tooltip.tsx",
+    "./page-shell": "./src/page-shell.tsx",
+    "./page-header": "./src/page-header.tsx",
+    "./surface-card": "./src/surface-card.tsx",
+    "./data-table": "./src/data-table.tsx",
+    "./stat-card": "./src/stat-card.tsx"
   },
   "scripts": {
     "lint": "echo 'no lint configured'",

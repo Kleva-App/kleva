@@ -1,29 +1,15 @@
 import { useMemo, useState } from "react";
 import { Input } from "@nudle/ui/input";
 import { Badge } from "@nudle/ui/badge";
+import { PageHeader } from "@nudle/ui/page-header";
+import { DataTable } from "@nudle/ui/data-table";
+import { StatGrid } from "@nudle/ui/stat-card";
 import { cn } from "@/lib/utils";
 import { useSchool } from "@/contexts/SchoolContext";
 import { getSchoolDemo, metricTone } from "@/data/school-demo";
 
-export function PageHeader({
-  title,
-  subtitle,
-  action,
-}: {
-  title: string;
-  subtitle?: string;
-  action?: React.ReactNode;
-}) {
-  return (
-    <div className="flex items-start justify-between gap-4 flex-wrap">
-      <div>
-        <h1 className="page-title">{title}</h1>
-        {subtitle ? <p className="page-subtitle mt-1 max-w-2xl">{subtitle}</p> : null}
-      </div>
-      {action}
-    </div>
-  );
-}
+export { PageHeader, DataTable };
+export { StatGrid as KpiGrid };
 
 export function SearchField({
   value,
@@ -43,32 +29,6 @@ export function SearchField({
       placeholder={placeholder}
       className={cn("rounded-full bg-card", className)}
     />
-  );
-}
-
-export function KpiGrid({
-  items,
-}: {
-  items: { label: string; value: string | number; tone?: "default" | "good" | "warn" | "bad" }[];
-}) {
-  return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-      {items.map((item) => (
-        <div key={item.label} className="surface-card p-5">
-          <p className="text-sm text-muted-foreground mb-2">{item.label}</p>
-          <p
-            className={cn(
-              "text-3xl font-semibold tracking-tight",
-              item.tone === "good" && "metric-good",
-              item.tone === "warn" && "metric-warn",
-              item.tone === "bad" && "metric-bad",
-            )}
-          >
-            {item.value}
-          </p>
-        </div>
-      ))}
-    </div>
   );
 }
 
@@ -153,33 +113,6 @@ export function useFilteredRows<T>(rows: T[], query: string, keys: (row: T) => s
     return rows.filter((row) => keys(row).toLowerCase().includes(needle));
   }, [rows, q, keys]);
   return { q, setQ, filtered };
-}
-
-export function DataTable({
-  headers,
-  children,
-}: {
-  headers: string[];
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="surface-card overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border/50 text-left text-muted-foreground">
-              {headers.map((h) => (
-                <th key={h} className="px-4 py-3 font-medium whitespace-nowrap">
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>{children}</tbody>
-        </table>
-      </div>
-    </div>
-  );
 }
 
 export function money(n: number) {

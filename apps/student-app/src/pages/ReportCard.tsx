@@ -1,4 +1,7 @@
 import { Badge } from "@nudle/ui/badge";
+import { PageHeader } from "@nudle/ui/page-header";
+import { SurfaceCard } from "@nudle/ui/surface-card";
+import { StatCard } from "@nudle/ui/stat-card";
 import { Award, TrendingUp, FileBarChart } from "lucide-react";
 
 interface CourseResult {
@@ -86,53 +89,39 @@ export default function ReportCard() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="page-title">Report Card</h1>
-        <p className="page-subtitle mt-1">Final exam results and overall performance</p>
-      </div>
+      <PageHeader
+        title="Report Card"
+        subtitle="Final exam results and overall performance"
+      />
 
       {!hasResults ? (
-        <div className="surface-card p-12 text-center">
+        <SurfaceCard className="p-12 text-center">
           <FileBarChart className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
           <p className="font-medium">No results yet</p>
           <p className="text-sm text-muted-foreground mt-1">
             Your report card will appear when grades are published.
           </p>
-        </div>
+        </SurfaceCard>
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[
-              {
-                label: "Overall Average",
-                value: `${weightedAverage.toFixed(1)}%`,
-                icon: Award,
-              },
-              { label: "GPA", value: gpa, icon: TrendingUp },
-              { label: "Total Credits", value: String(totalCredits), icon: null },
-              { label: "Distinctions", value: String(distinctions), icon: Award },
-            ].map((kpi) => (
-              <div key={kpi.label} className="surface-card p-5">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm text-muted-foreground">{kpi.label}</p>
-                    <p className="text-2xl font-semibold tracking-tight mt-2">{kpi.value}</p>
-                  </div>
-                  {kpi.icon ? (
-                    <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center shrink-0">
-                      <kpi.icon className="h-5 w-5" />
-                    </div>
-                  ) : (
-                    <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center shrink-0">
-                      <span className="text-sm font-semibold">{mockResults.length}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
+            <StatCard
+              label="Overall Average"
+              value={`${weightedAverage.toFixed(1)}%`}
+              icon={Award}
+              compact
+            />
+            <StatCard label="GPA" value={gpa} icon={TrendingUp} compact />
+            <StatCard label="Total Credits" value={String(totalCredits)} compact />
+            <StatCard
+              label="Distinctions"
+              value={String(distinctions)}
+              icon={Award}
+              compact
+            />
           </div>
 
-          <section className="surface-card p-5 md:p-6 overflow-hidden">
+          <SurfaceCard className="p-5 md:p-6 overflow-hidden">
             <h2 className="text-lg font-semibold mb-4">Course Results</h2>
             <div className="overflow-x-auto -mx-1 px-1">
               <table className="w-full min-w-[720px]">
@@ -212,10 +201,10 @@ export default function ReportCard() {
                 </tbody>
               </table>
             </div>
-          </section>
+          </SurfaceCard>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <section className="surface-card p-6">
+            <SurfaceCard className="p-6">
               <h2 className="text-lg font-semibold mb-4">Grade Distribution</h2>
               <div className="space-y-3">
                 {["A+", "A", "B+", "B"].map((grade) => {
@@ -237,9 +226,9 @@ export default function ReportCard() {
                   );
                 })}
               </div>
-            </section>
+            </SurfaceCard>
 
-            <section className="surface-card p-6">
+            <SurfaceCard className="p-6">
               <h2 className="text-lg font-semibold mb-4">Performance Insights</h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
@@ -278,7 +267,7 @@ export default function ReportCard() {
                   </div>
                 </div>
               </div>
-            </section>
+            </SurfaceCard>
           </div>
         </>
       )}

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
+import { SurfaceCard } from "@nudle/ui/surface-card";
 import { cn } from "@/lib/utils";
 
 export type PeopleColumn<T> = {
@@ -37,7 +38,7 @@ export function PeopleDataTable<T extends { id: string; name: string }>({
   toolbar?: ReactNode;
 }) {
   return (
-    <div className="surface-card overflow-hidden">
+    <SurfaceCard className="overflow-hidden">
       {toolbar ? (
         <div className="flex flex-wrap items-center gap-3 px-4 py-3 border-b border-border/50">
           {toolbar}
@@ -121,6 +122,6 @@ export function PeopleDataTable<T extends { id: string; name: string }>({
           </tbody>
         </table>
       </div>
-    </div>
+    </SurfaceCard>
   );
 }

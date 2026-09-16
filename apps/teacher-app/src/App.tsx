@@ -12,6 +12,7 @@ import { Header } from "@/components/Layout/Header";
 import { Footer } from "@/components/Layout/Footer";
 import { AskKlevaDialog } from "@/components/AskKleva/AskKlevaDialog";
 import { SchoolAdminRoute } from "@/components/SchoolAdminRoute";
+import { PageShell } from "@nudle/ui/page-shell";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
 import Grading from "./pages/Grading";
@@ -70,20 +71,19 @@ function AppShell() {
           isOpen={sidebarOpen}
           mobileOpen={mobileSidebarOpen}
           onMobileClose={() => setMobileSidebarOpen(false)}
+          onToggleCollapse={() => setSidebarOpen((v) => !v)}
         />
         <div
           className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
-            sidebarOpen ? "lg:ml-64" : "lg:ml-0"
+            sidebarOpen ? "lg:ml-64" : "lg:ml-16"
           }`}
         >
           <Header
             onAskKleva={() => setAskKlevaOpen(true)}
-            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
             onToggleMobileSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-            sidebarOpen={sidebarOpen}
           />
-          <main className="flex-1 p-5 md:p-8">
-            <div className="max-w-7xl mx-auto w-full space-y-6">
+          <main className="flex-1 min-w-0">
+            <PageShell>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/courses" element={<Courses />} />
@@ -121,7 +121,7 @@ function AppShell() {
 
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </div>
+            </PageShell>
           </main>
           <Footer />
         </div>

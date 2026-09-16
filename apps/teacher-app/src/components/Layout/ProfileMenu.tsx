@@ -29,6 +29,8 @@ interface ProfileMenuProps {
   className?: string;
   align?: "start" | "center" | "end";
   side?: "top" | "right" | "bottom" | "left";
+  /** Overrides the email line under the name (e.g. school name for admins). */
+  subtitle?: string;
 }
 
 export function ProfileMenu({
@@ -36,6 +38,7 @@ export function ProfileMenu({
   className,
   align = "end",
   side = "bottom",
+  subtitle,
 }: ProfileMenuProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -45,6 +48,7 @@ export function ProfileMenu({
 
   const name = me?.profile?.full_name || me?.email || "Educator";
   const email = me?.profile?.email || me?.email || "";
+  const secondary = subtitle ?? email;
   const initial = name.charAt(0).toUpperCase();
 
   const handleSignOut = async () => {
@@ -85,7 +89,7 @@ export function ProfileMenu({
                 </div>
                 <div className="flex-1 min-w-0 pr-1">
                   <p className="text-sm font-semibold truncate leading-none">{name}</p>
-                  <p className="text-[11px] text-muted-foreground mt-1 truncate">{email}</p>
+                  <p className="text-[11px] text-muted-foreground mt-1 truncate">{secondary}</p>
                 </div>
               </>
             )}

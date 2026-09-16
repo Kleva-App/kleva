@@ -21,18 +21,16 @@ import { ProfileMenu } from "@/components/Layout/ProfileMenu";
 import { useMe } from "@/hooks/useTeacherData";
 import { useSchool } from "@/contexts/SchoolContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { PageShell } from "@nudle/ui/page-shell";
 import { useEffect } from "react";
 
 interface HeaderProps {
   onAskKleva: () => void;
-  onToggleSidebar: () => void;
   onToggleMobileSidebar: () => void;
-  sidebarOpen: boolean;
 }
 
 export const Header = ({
   onAskKleva,
-  onToggleSidebar,
   onToggleMobileSidebar,
 }: HeaderProps) => {
   const { data: me } = useMe();
@@ -47,22 +45,15 @@ export const Header = ({
   }, [isSchoolAdmin]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <header className="h-16 sticky top-0 z-10 bg-background/80 backdrop-blur-md">
-      <div className="h-full px-4 md:px-8 flex items-center justify-between gap-4">
+    <header className="h-16 sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border/60">
+      <PageShell variant="bar" className="h-full flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 flex-1 max-w-xl">
           <Button
             variant="ghost"
             size="icon"
             onClick={onToggleMobileSidebar}
-            className="lg:hidden rounded-full"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onToggleSidebar}
-            className="hidden lg:flex rounded-full"
+            className="lg:hidden"
+            aria-label="Open menu"
           >
             <Menu className="h-5 w-5" />
           </Button>
@@ -98,7 +89,7 @@ export const Header = ({
           {isSchoolAdmin && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="rounded-full h-10 gap-1.5 hidden md:flex">
+                <Button variant="outline" className="h-10 gap-1.5 hidden md:flex">
                   Administrator portal
                   <ChevronDown className="h-3.5 w-3.5 opacity-60" />
                 </Button>
@@ -114,7 +105,7 @@ export const Header = ({
 
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="icon" className="rounded-full relative">
+              <Button variant="outline" size="icon" className="relative">
                 <Bell className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
@@ -132,12 +123,12 @@ export const Header = ({
           <ThemeToggle compact />
           <ProfileMenu variant="avatar" />
 
-          <Button onClick={onAskKleva} className="rounded-full" size="default">
+          <Button onClick={onAskKleva} size="default">
             <Bot className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">Ask Kleva</span>
           </Button>
         </div>
-      </div>
+      </PageShell>
     </header>
   );
 };
