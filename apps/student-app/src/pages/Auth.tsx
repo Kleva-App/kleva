@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 const ACCOUNT_TYPES: Array<{ id: AccountRole; label: string }> = [
   { id: "student", label: "Student" },
   { id: "parent", label: "Parent" },
-  { id: "institution", label: "Institution" },
+  { id: "organization", label: "Organization" },
 ];
 
 function safeNext(path: string | null) {
@@ -24,7 +24,10 @@ function safeNext(path: string | null) {
 }
 
 function roleFromQuery(role: string | null): AccountRole {
-  if (role === "parent" || role === "institution") return role;
+  if (role === "parent") return role;
+  if (role === "organization" || role === "organisation" || role === "institution") {
+    return "organization";
+  }
   return "student";
 }
 
@@ -34,7 +37,7 @@ async function loadRoles() {
 }
 
 function defaultPath(role: AccountRole, created: boolean) {
-  if (role === "institution") return created ? "/finance/school" : "/finance/home";
+  if (role === "organization") return created ? "/finance/school" : "/finance/home";
   if (role === "parent") return created ? "/family" : "/finance/home";
   return "/";
 }
@@ -73,7 +76,7 @@ export default function Auth() {
     await queryClient.invalidateQueries({ queryKey: ["me"] });
     let roles = await loadRoles();
 
-    if (accountType === "parent" || accountType === "institution") {
+    if (accountType === "parent" || accountType === "organization") {
       if (!roles.includes(accountType)) {
         await api.post("/api/roles", { role: accountType });
         await queryClient.invalidateQueries({ queryKey: ["me"] });
@@ -81,8 +84,8 @@ export default function Auth() {
       }
       if (!roles.includes(accountType)) {
         throw new Error(
-          accountType === "institution"
-            ? "Institution access could not be enabled for this account."
+          accountType === "organization"
+            ? "Organization access could not be enabled for this account."
             : "Parent access could not be enabled for this account.",
         );
       }
@@ -104,14 +107,14 @@ export default function Auth() {
       return;
     }
 
-    if (accountType === "institution" || roles.includes("institution")) {
+    if (accountType === "organization" || roles.includes("organization")) {
       toast({
-        title: created ? "Institution account created" : "Welcome back!",
+        title: created ? "Organization account created" : "Welcome back!",
         description: created
-          ? "You can apply for school and infrastructure finance."
-          : "Signed in to the institution portal.",
+          ? "You can apply for working capital and infrastructure finance."
+          : "Signed in to the organization portal.",
       });
-      setResumePath(defaultPath("institution", created));
+      setResumePath(defaultPath("organization", created));
       return;
     }
 
@@ -189,14 +192,14 @@ export default function Auth() {
   };
 
   const heading =
-    accountType === "institution"
-      ? "Institution Portal"
+    accountType === "organization"
+      ? "Organization Portal"
       : accountType === "parent"
         ? "Parent Portal"
         : "Student Portal";
   const description =
-    accountType === "institution"
-      ? "Sign in to apply for school and infrastructure finance"
+    accountType === "organization"
+      ? "Sign in to apply for working capital and infrastructure finance"
       : accountType === "parent"
         ? "Sign in to manage finances and your child's school portal"
         : "Sign in to access your courses and assignments";
@@ -290,12 +293,12 @@ export default function Auth() {
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="signup-name">
-                    {accountType === "institution" ? "Your name" : "Full Name"}
+                    {accountType === "organization" ? "Your name" : "Full Name"}
                   </Label>
                   <Input
                     id="signup-name"
                     type="text"
-                    placeholder={accountType === "institution" ? "Bursar or finance officer" : "John Doe"}
+                    placeholder={accountType === "organization" ? "Treasurer or finance officer" : "John Doe"}
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     className="rounded-xl"
@@ -332,10 +335,10 @@ export default function Auth() {
                     on your parent account.
                   </p>
                 )}
-                {accountType === "institution" && (
+                {accountType === "organization" && (
                   <p className="text-xs text-muted-foreground">
-                    After signing up you can apply for school fees bridging, working capital and
-                    infrastructure finance.
+                    After signing up you can apply for working capital, fee bridging, and
+                    infrastructure finance for your school, church, or small business.
                   </p>
                 )}
                 <Button type="submit" className="w-full rounded-full" disabled={isLoading}>

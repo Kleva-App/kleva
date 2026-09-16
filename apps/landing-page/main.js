@@ -1,3 +1,13 @@
+function remapLegacyHash() {
+  if (location.hash !== "#institutions") return;
+  const target = document.getElementById("organizations");
+  history.replaceState(null, "", "#organizations");
+  target?.scrollIntoView();
+}
+
+remapLegacyHash();
+window.addEventListener("hashchange", remapLegacyHash);
+
 const toggle = document.querySelector("[data-nav-toggle]");
 const mobile = document.querySelector("[data-nav-mobile]");
 const toggleOpen = document.querySelector("[data-toggle-open]");

@@ -1,15 +1,49 @@
 import { db } from "./db.js";
 import { DEFAULT_SCHOOL_ID, schoolById, type School } from "./schools.js";
 
+export type AccountRole = "student" | "teacher" | "parent" | "organization";
+
+export function normalizeAccountRole(value: string): AccountRole | null {
+  const role = value.toLowerCase();
+  if (role === "student" || role === "teacher" || role === "parent") return role;
+  if (role === "organization" || role === "organisation" || role === "institution") {
+    return "organization";
+  }
+  return null;
+}
+
+export function publicRoles(roles: string[]) {
+  return roles.map((role) => (role === "institution" ? "organization" : role));
+}
+
 export async function userHasRole(userId: string, role: string) {
   const row = await db("user_roles").where({ user_id: userId, role }).first("id");
   return Boolean(row);
 }
 
-export async function assignAccountRole(
-  userId: string,
-  role: "student" | "teacher" | "parent" | "institution",
-) {
+export async function userHasOrganizationRole(userId: string) {
+  return (
+    (await userHasRole(userId, "organization")) || (await userHasRole(userId, "institution"))
+  );
+}
+
+export async function assignAccountRole(userId: string, role: AccountRole) {
+  if (role === "organization") {
+    const legacy = await db("user_roles")
+      .where({ user_id: userId, role: "institution" })
+      .first("id");
+    if (legacy) {
+      const existing = await db("user_roles")
+        .where({ user_id: userId, role: "organization" })
+        .first("id");
+      if (existing) {
+        await db("user_roles").where({ id: legacy.id }).delete();
+      } else {
+        await db("user_roles").where({ id: legacy.id }).update({ role: "organization" });
+      }
+    }
+  }
+
   const existing = await db("user_roles").where({ user_id: userId, role }).first();
   if (!existing) {
     await db("user_roles").insert({ user_id: userId, role });
@@ -21,7 +55,7 @@ export async function assignAccountRole(
     });
   }
 
-  if (role === "parent" || role === "institution") {
+  if (role === "parent" || role === "organization") {
     await db("user_roles").where({ user_id: userId, role: "student" }).delete();
   }
 

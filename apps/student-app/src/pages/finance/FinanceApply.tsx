@@ -398,7 +398,7 @@ export default function FinanceApply() {
             </p>
             <p>
               3. Application of funds. Advances are disbursed strictly toward eligible school fees
-              and education expenses and may be paid directly to the institution.
+              and education expenses and may be paid directly to the organization.
             </p>
             <p>
               4. Default. Failure to pay any instalment when due renders the full outstanding balance

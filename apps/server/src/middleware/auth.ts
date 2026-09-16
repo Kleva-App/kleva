@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { fromNodeHeaders } from "better-auth/node";
 import { auth, type SessionUser } from "../lib/auth.js";
-import { userHasRole } from "../lib/access.js";
+import { userHasOrganizationRole, userHasRole } from "../lib/access.js";
 
 export type AuthenticatedRequest = Request & {
   user?: SessionUser;
@@ -70,8 +70,8 @@ export async function requireFinance(
       return;
     }
     const parent = await userHasRole(req.user.id, "parent");
-    const institution = await userHasRole(req.user.id, "institution");
-    if (!parent && !institution) {
+    const organization = await userHasOrganizationRole(req.user.id);
+    if (!parent && !organization) {
       res.status(403).json({ error: "Finance access required" });
       return;
     }

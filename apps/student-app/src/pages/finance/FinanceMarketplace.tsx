@@ -54,7 +54,7 @@ const products = [
   {
     icon: Truck,
     title: "Order Finance",
-    desc: "Funding for suppliers fulfilling confirmed school and institutional orders.",
+    desc: "Funding for suppliers fulfilling confirmed school and organization orders.",
     tag: "Purchase order backed",
     to: "/finance/supplier",
     cta: "Learn more",
@@ -74,7 +74,7 @@ export default function FinanceMarketplace() {
     <div>
       <h1 className="page-title">Marketplace</h1>
       <p className="page-subtitle mt-1">
-        Every Blue Finance product available to Kleva families, schools and suppliers.
+        Every Blue Finance product available to Kleva families, organizations and suppliers.
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

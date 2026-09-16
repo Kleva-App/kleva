@@ -231,7 +231,7 @@ function fillSuccess() {
   setText("[data-summary-amount]", amount > 0 ? usd(amount) : "—");
   setText("[data-summary-tenure]", `${months} months`);
   setText("[data-summary-monthly]", amount > 0 ? usd(q.monthly) : "—");
-  setText("[data-summary-institution]", valueOf("institution") || "—");
+  setText("[data-summary-organization]", valueOf("organization") || "—");
   setText("[data-summary-contact]", valueOf("contactPerson") || "—");
   setText("[data-summary-email]", valueOf("schoolEmail") || "—");
   setText("[data-summary-phone]", valueOf("schoolPhone") || "—");
@@ -328,7 +328,7 @@ function syncStart() {
   const schoolSubmit = document.querySelector("[data-school-submit]");
   if (schoolSubmit instanceof HTMLButtonElement) {
     schoolSubmit.disabled = !(
-      valueOf("institution") &&
+      valueOf("organization") &&
       valueOf("contactPerson") &&
       valueOf("schoolEmail") &&
       valueOf("schoolPhone")
@@ -444,7 +444,7 @@ function fillCurrentStep() {
 
   if (step === 0) {
     if (applicantType === "school") {
-      set("institution", "Gateway High School");
+      set("organization", "Gateway High School");
       set("contactPerson", "Rutendo Ncube");
       set("schoolEmail", "bursar@gateway.ac.zw");
       set("schoolPhone", "+263 242 700 111");
@@ -553,7 +553,7 @@ document.querySelector("[data-apply-start]")?.addEventListener("click", () => {
 document.querySelector("[data-school-submit]")?.addEventListener("click", () => {
   const stepEl = steps.find((el) => Number(el.dataset.step) === 0);
   if (
-    !required(["institution", "contactPerson", "schoolEmail", "schoolPhone"], stepEl)
+    !required(["organization", "contactPerson", "schoolEmail", "schoolPhone"], stepEl)
   ) {
     return;
   }

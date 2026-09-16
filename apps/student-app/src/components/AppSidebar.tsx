@@ -55,10 +55,10 @@ const financeItems = [
 
 export function AppSidebar() {
   const { open, isMobile } = useSidebar();
-  const { isParent, isInstitution, canFinance, children, loading } = useFamily();
+  const { isParent, isOrganization, canFinance, children, loading } = useFamily();
   const showLabels = open || isMobile;
-  const showSchoolNav = (!isParent && !isInstitution) || loading || children.length > 0;
-  const applyUrl = isInstitution ? "/finance/school" : "/finance/apply";
+  const showSchoolNav = (!isParent && !isOrganization) || loading || children.length > 0;
+  const applyUrl = isOrganization ? "/finance/school" : "/finance/apply";
 
   const financeNav = financeItems.map((item) =>
     item.title === "Apply" ? { ...item, url: applyUrl } : item,

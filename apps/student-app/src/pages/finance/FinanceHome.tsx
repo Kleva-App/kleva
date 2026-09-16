@@ -16,9 +16,9 @@ const products = [
   },
   {
     icon: Building2,
-    title: "School Finance",
-    desc: "For qualifying schools needing equipment, working capital or infrastructure.",
-    cta: "Explore School Finance",
+    title: "Organization Finance",
+    desc: "For schools, churches, and small businesses needing equipment, working capital or infrastructure.",
+    cta: "Explore Organization Finance",
     to: "/finance/school",
     tone: "bg-brand-teal/15 text-brand-teal",
   },
@@ -33,7 +33,7 @@ const products = [
 ];
 
 export default function FinanceHome() {
-  const { activeChild, children, isInstitution } = useFamily();
+  const { activeChild, children, isOrganization } = useFamily();
   const { hidden: schoolPortalHidden, loading } = useSchoolPortalHidden();
   const showAds = !loading && schoolPortalHidden;
 
@@ -51,7 +51,7 @@ export default function FinanceHome() {
         </div>
       )}
 
-      {!isInstitution && children.length === 0 && (
+      {!isOrganization && children.length === 0 && (
         <div className="mt-6 rounded-2xl border border-dashed border-border bg-muted/30 p-5">
           <p className="text-sm font-medium">Invite a student to view their portal</p>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -145,7 +145,7 @@ export default function FinanceHome() {
               <p className="text-xs text-muted-foreground">Submit an education finance application to see it here.</p>
             </div>
             <Button asChild size="sm" className="ml-auto rounded-full">
-              <Link to={isInstitution ? "/finance/school" : "/finance/apply"}>Apply</Link>
+              <Link to={isOrganization ? "/finance/school" : "/finance/apply"}>Apply</Link>
             </Button>
           </div>
         </div>

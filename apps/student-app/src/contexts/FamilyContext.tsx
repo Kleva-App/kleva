@@ -7,7 +7,7 @@ import { useMe, type LinkedChild } from "@/hooks/use-me";
 
 type FamilyContextType = {
   isParent: boolean;
-  isInstitution: boolean;
+  isOrganization: boolean;
   canFinance: boolean;
   loading: boolean;
   children: LinkedChild[];
@@ -21,7 +21,7 @@ const FamilyContext = createContext<FamilyContextType | undefined>(undefined);
 export function FamilyProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const { data, isParent, isInstitution, canFinance, children: linked, isPending, isFetching } = useMe();
+  const { data, isParent, isOrganization, canFinance, children: linked, isPending, isFetching } = useMe();
   const [activeId, setActiveId] = useState<string | null>(() => getActiveChildId());
 
   const activeChild = useMemo(() => {
@@ -47,7 +47,7 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     <FamilyContext.Provider
       value={{
         isParent,
-        isInstitution,
+        isOrganization,
         canFinance,
         loading: Boolean(user) && (isPending || (isFetching && !data)),
         children: linked,

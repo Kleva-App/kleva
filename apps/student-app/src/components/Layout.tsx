@@ -12,7 +12,7 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-  const { isParent, isInstitution } = useFamily();
+  const { isParent, isOrganization } = useFamily();
 
   return (
     <SidebarProvider
@@ -31,8 +31,8 @@ export function Layout({ children }: LayoutProps) {
                   <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder={
-                      isInstitution
-                        ? "Search applications or school finance…"
+                      isOrganization
+                        ? "Search applications or organization finance…"
                         : isParent
                           ? "Search courses, fees, or applications…"
                           : "Search courses, assignments, or resources…"

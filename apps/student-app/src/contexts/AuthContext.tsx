@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth-client";
 import { api } from "@/lib/api";
 
-export type AccountRole = "student" | "parent" | "institution";
+export type AccountRole = "student" | "parent" | "organization";
 
 interface AuthContextType {
   user: { id: string; email: string; name: string } | null;

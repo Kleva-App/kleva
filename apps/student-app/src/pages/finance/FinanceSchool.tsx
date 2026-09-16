@@ -46,7 +46,7 @@ export default function FinanceSchool() {
     try {
       await wait(400);
       await api.post("/api/finance/applications", {
-        product: "School Finance",
+        product: "Organization Finance",
         amount: amount || "0",
         school,
         form: {
@@ -77,7 +77,7 @@ export default function FinanceSchool() {
         </span>
         <h1 className="mt-6 text-2xl font-semibold text-foreground">Application submitted</h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          Your school finance request has been sent to Blue Finance. A relationship manager will be
+          Your organization finance request has been sent to Blue Finance. A relationship manager will be
           in touch within two business days.
         </p>
         <Button asChild className="mt-8 rounded-full px-6">
@@ -93,9 +93,9 @@ export default function FinanceSchool() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="page-title">School Finance</h1>
+      <h1 className="page-title">Organization Finance</h1>
       <p className="page-subtitle mt-1">
-        Working capital, fee bridging, infrastructure and equipment for your institution.
+        Working capital, fee bridging, infrastructure and equipment for your organization.
       </p>
 
       <div className="mt-4 rounded-xl border border-border bg-card px-4 py-3 text-sm shadow-sm">

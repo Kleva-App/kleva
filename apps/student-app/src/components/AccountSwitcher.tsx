@@ -33,20 +33,20 @@ function SchoolMark({
 
 export function AccountSwitcher({ className }: { className?: string }) {
   const navigate = useNavigate();
-  const { isParent, isInstitution, children, activeChild, setActiveChild } = useFamily();
+  const { isParent, isOrganization, children, activeChild, setActiveChild } = useFamily();
   const { data: me } = useMe();
   const { open, isMobile, setOpenMobile } = useSidebar();
   const showLabels = open || isMobile;
 
   const school = dummySchoolForId(isParent ? activeChild?.id : me?.id);
-  const parentName = me?.profile?.full_name || me?.email || (isInstitution ? "Institution" : "Parent");
-  const title = isInstitution
-    ? me?.profile?.full_name || "Institution"
+  const parentName = me?.profile?.full_name || me?.email || (isOrganization ? "Organization" : "Parent");
+  const title = isOrganization
+    ? me?.profile?.full_name || "Organization"
     : isParent
       ? (activeChild?.name ?? "Select a student")
       : me?.profile?.full_name || "Student";
-  const subtitle = isInstitution
-    ? "Institution account"
+  const subtitle = isOrganization
+    ? "Organization account"
     : isParent && !activeChild
       ? children.length
         ? "Choose a student"

@@ -1,21 +1,37 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { Link } from "react-router-dom";
 import { BadgeCheck } from "lucide-react";
-import zikicashMark from "@/assets/zikicash-mark.svg";
 import klevaMark from "@/assets/kleva-mark.svg";
-import bannerPortrait from "@/assets/zikimall-banner-portrait.png";
-import cbzBanner from "@/assets/kleva-cbz-banner.jpg";
+import zikicashLogo from "@/assets/zikicash-logo.png";
+import zikicashPortrait from "@/assets/zikimall-banner-portrait.png";
+import cbzLogo from "@/assets/cbz-logo.png";
+import cbzPhoto from "@/assets/kleva-cbz-banner.jpg";
+import enbeeLogo from "@/assets/enbee-logo.png";
+import enbeePhoto from "@/assets/enbee-banner.jpg";
+import redSphereLogo from "@/assets/red-sphere-logo.png";
+import redSpherePhoto from "@/assets/red-sphere-banner.jpg";
+import aiecLogo from "@/assets/aiec-logo.png";
+import aiecPhoto from "@/assets/aiec-banner.jpg";
+import cimasLogo from "@/assets/cimas-logo.svg";
+import cimasPhoto from "@/assets/cimas-banner.jpg";
 import { useFamily } from "@/contexts/FamilyContext";
 import { cn } from "@/lib/utils";
 
 export const ZIKIMALL_URL = "https://zikimall.com/";
+export const ENBEE_URL = "https://www.enbee.co.zw";
+export const AIEC_URL = "https://www.aiec.africa/";
+export const CIMAS_URL = "https://cimas.co.zw/our-packages/";
 
 const ROTATE_MS = 10_000;
 
 const slides = [
   { id: "zikicash", label: "zikicash" },
   { id: "cbz", label: "Kleva and CBZ partnership" },
+  { id: "redsphere", label: "Kleva and Red Sphere partnership" },
+  { id: "enbee", label: "Kleva and Enbee partnership" },
+  { id: "aiec", label: "Kleva and AIEC partnership" },
+  { id: "cimas", label: "Kleva and Cimas partnership" },
 ] as const;
 
 export function ZikimallBanner() {
@@ -110,7 +126,7 @@ export function ZikimallBanner() {
               aria-roledescription="slide"
               aria-label={slide.label}
             >
-              {slide.id === "zikicash" ? <ZikicashSlide /> : <CbzPartnershipSlide />}
+              <BannerSlide id={slide.id} />
             </div>
           ))}
         </div>
@@ -138,112 +154,329 @@ export function ZikimallBanner() {
   );
 }
 
+function BannerSlide({ id }: { id: (typeof slides)[number]["id"] }) {
+  switch (id) {
+    case "zikicash":
+      return <ZikicashSlide />;
+    case "cbz":
+      return <CbzPartnershipSlide />;
+    case "redsphere":
+      return <RedSpherePartnershipSlide />;
+    case "enbee":
+      return <EnbeePartnershipSlide />;
+    case "aiec":
+      return <AiecPartnershipSlide />;
+    case "cimas":
+      return <CimasPartnershipSlide />;
+  }
+}
+
 function ZikicashSlide() {
   return (
-    <section className="isolate flex h-full min-h-[320px] w-full flex-col overflow-hidden bg-white text-[#1A1A1A] md:min-h-[360px]">
-      <div className="grid h-full min-h-[320px] flex-1 md:min-h-[360px] md:grid-cols-[1.05fr_0.95fr]">
-        <div className="flex flex-col justify-center px-7 py-8 sm:px-10 sm:py-10 lg:px-12">
-          <div className="flex items-center gap-2.5">
-            <img src={zikicashMark} alt="" draggable={false} className="h-7 w-8" />
-            <span className="text-[1.65rem] font-bold leading-none tracking-tight text-[#2B1570]">
-              zikicash
-            </span>
-          </div>
-
-          <h2 className="mt-6 max-w-md text-[1.85rem] font-bold leading-[1.12] tracking-tight sm:text-[2.15rem] lg:text-[2.35rem]">
-            Send USD cash to your loved ones instantly.
-          </h2>
-
-          <p className="mt-4 max-w-md text-sm leading-relaxed text-neutral-500 sm:text-[15px]">
-            Send USD from the UK to Zimbabwe securely and instantly. Your loved ones can cash
-            out at any CBZ ATM, branch, agent or receive directly into their bank account.
-          </p>
-
-          <a
-            href={ZIKIMALL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-7 inline-flex h-11 w-fit cursor-pointer items-center justify-center rounded-full border-2 border-[#F07818] px-7 text-sm font-semibold text-[#F07818] transition-colors hover:bg-[#F07818] hover:text-white"
-          >
-            Send Money Now
-          </a>
-        </div>
-
-        <div className="relative isolate h-full min-h-[240px] overflow-hidden bg-white md:min-h-full">
-          <svg
-            className="pointer-events-none absolute inset-0 z-0 h-full w-full"
-            viewBox="0 0 480 420"
-            preserveAspectRatio="xMaxYMax slice"
-            aria-hidden
-          >
-            <polygon points="480,70 480,420 210,420" fill="#E85D2A" />
-            <polygon points="480,230 480,420 265,420" fill="#F5B400" />
-          </svg>
-          <img
-            src={bannerPortrait}
-            alt="A woman smiling as she sends money from her phone"
-            draggable={false}
-            className="pointer-events-none absolute inset-0 z-[1] h-full w-full object-cover object-[center_20%]"
-          />
-        </div>
-      </div>
-    </section>
+    <PartnershipSlide
+      brand="zikicash"
+      accent="#F07818"
+      accent2="#F5B400"
+      panel="#2B1570"
+      headline="Send USD cash to your loved ones instantly."
+      body="Send USD from the UK to Zimbabwe securely and instantly. Your loved ones can cash out at any CBZ ATM, branch, agent or receive directly into their bank account."
+      logo={zikicashLogo}
+      logoAlt="zikicash, powered by CBZ Holdings"
+      logoClassName="h-auto w-[10.5rem] sm:w-48"
+      photo={zikicashPortrait}
+      photoAlt="A woman smiling as she sends money from her phone"
+      photoPosition="center 18%"
+      cutout
+      cta={
+        <a
+          href={ZIKIMALL_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-7 inline-flex h-11 w-fit cursor-pointer items-center justify-center rounded-full bg-[#F07818] px-7 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+        >
+          Send Money Now
+        </a>
+      }
+    />
   );
 }
 
 function CbzPartnershipSlide() {
-  const { isParent, isInstitution } = useFamily();
-  const financeCta = isInstitution
-    ? { to: "/finance/school", label: "Explore school finance" }
+  const { isParent, isOrganization } = useFamily();
+  const financeCta = isOrganization
+    ? { to: "/finance/school", label: "Explore organization finance" }
     : isParent
       ? { to: "/finance/home", label: "Explore finance" }
       : null;
 
   return (
-    <section className="relative isolate flex h-full min-h-[320px] w-full flex-col overflow-hidden bg-[#071A33] text-white md:min-h-[360px]">
-      <img
-        src={cbzBanner}
-        alt=""
-        draggable={false}
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[70%_center]"
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#071A33] via-[#071A33]/90 to-[#071A33]/20" />
-      <div className="absolute inset-y-0 right-0 w-1.5 bg-[#D4A017]" />
-
-      <div className="relative flex h-full min-h-[320px] flex-1 flex-col justify-center px-7 py-8 sm:px-10 sm:py-10 md:min-h-[360px] lg:px-12">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-white/90 backdrop-blur-sm">
-            <BadgeCheck className="h-3.5 w-3.5 text-[#D4A017]" />
-            Exclusive partnership
-          </span>
-        </div>
-
-        <div className="mt-6 flex items-center gap-3">
-          <img src={klevaMark} alt="" draggable={false} className="h-8 w-8" />
-          <p className="text-sm font-semibold tracking-tight">
-            Kleva <span className="mx-1 text-[#D4A017]">×</span> CBZ
-          </p>
-        </div>
-
-        <h2 className="mt-4 max-w-md text-[1.85rem] font-bold leading-[1.12] tracking-tight sm:text-[2.15rem] lg:text-[2.35rem]">
-          School fees, backed by a bank you trust.
-        </h2>
-
-        <p className="mt-4 max-w-md text-sm leading-relaxed text-white/75 sm:text-[15px]">
-          Kleva has partnered with CBZ so families can pay school fees, apply for education
-          finance, and bank with Zimbabwe&apos;s trusted name, all from one place.
-        </p>
-
-        {financeCta ? (
+    <PartnershipSlide
+      brand="CBZ"
+      accent="#D4A017"
+      accent2="#E30613"
+      panel="#071A33"
+      headline="School fees, backed by a bank you trust."
+      body="Kleva has partnered with CBZ so families can pay school fees, apply for education finance, and bank with Zimbabwe's trusted name, all from one place."
+      logo={cbzLogo}
+      logoAlt="CBZ Holdings"
+      logoClassName="h-10 w-auto sm:h-12"
+      photo={cbzPhoto}
+      photoAlt="A student standing outside a university campus with a tablet"
+      photoPosition="78% center"
+      cta={
+        financeCta ? (
           <Link
             to={financeCta.to}
-            className="mt-7 inline-flex h-11 w-fit cursor-pointer items-center justify-center rounded-full bg-[#D4A017] px-7 text-sm font-semibold text-[#071A33] transition-colors hover:bg-[#e0b122]"
+            className="mt-7 inline-flex h-11 w-fit cursor-pointer items-center justify-center rounded-full bg-[#D4A017] px-7 text-sm font-semibold text-[#071A33] transition-opacity hover:opacity-90"
           >
             {financeCta.label}
           </Link>
         ) : (
-          <p className="mt-7 text-sm text-white/70">Available on parent accounts in Kleva Finance.</p>
-        )}
+          <p className="mt-7 text-sm text-neutral-500">
+            Available on parent accounts in Kleva Finance.
+          </p>
+        )
+      }
+    />
+  );
+}
+
+function EnbeePartnershipSlide() {
+  return (
+    <PartnershipSlide
+      brand="Enbee"
+      accent="#F15A22"
+      accent2="#F5B400"
+      panel="#1B2744"
+      headline="School uniforms, from a name families trust."
+      body="Kleva has partnered with Enbee, Zimbabwe's leading schoolwear supplier since 1959, so families can shop quality uniforms, sportswear, and accessories at branches nationwide."
+      logo={enbeeLogo}
+      logoAlt="Enbee, you, me and schoolwear"
+      logoClassName="h-10 w-auto sm:h-12"
+      photo={enbeePhoto}
+      photoAlt="Zimbabwe school students in red jumpers and checked shirts"
+      cta={
+        <a
+          href={ENBEE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-7 inline-flex h-11 w-fit cursor-pointer items-center justify-center rounded-full px-7 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          style={{ backgroundColor: "#F15A22" }}
+        >
+          Shop Enbee
+        </a>
+      }
+    />
+  );
+}
+
+function RedSpherePartnershipSlide() {
+  const { isParent, isOrganization } = useFamily();
+  const financeCta = isOrganization
+    ? { to: "/finance/school", label: "Explore organization finance" }
+    : isParent
+      ? { to: "/finance/apply", label: "Apply for education finance" }
+      : null;
+
+  return (
+    <PartnershipSlide
+      brand="Red Sphere"
+      accent="#E30613"
+      accent2="#7A0C14"
+      panel="#1A0A0C"
+      headline="School fees loans, made possible."
+      body="Kleva has partnered with Red Sphere Finance, the CBZ Holdings microfinance arm, so families can apply for education loans — whether or not they bank with CBZ."
+      logo={redSphereLogo}
+      logoAlt="Red Sphere Finance, a member of the CBZ Group"
+      logoClassName="h-8 w-auto sm:h-10"
+      photo={redSpherePhoto}
+      photoAlt="US dollar notes counted for school fees"
+      cta={
+        financeCta ? (
+          <Link
+            to={financeCta.to}
+            className="mt-7 inline-flex h-11 w-fit cursor-pointer items-center justify-center rounded-full bg-[#E30613] px-7 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          >
+            {financeCta.label}
+          </Link>
+        ) : (
+          <p className="mt-7 text-sm text-neutral-500">
+            Available on parent accounts in Kleva Finance.
+          </p>
+        )
+      }
+    />
+  );
+}
+
+function AiecPartnershipSlide() {
+  return (
+    <PartnershipSlide
+      brand="AIEC"
+      accent="#A11C24"
+      accent2="#D7BF76"
+      panel="#A11C24"
+      headline="Textbooks and training, from Zimbabwe's education supplier."
+      body="Kleva has partnered with the Africa International Education Centre so families and schools can source Cambridge, Oxford, Collins and more — plus teacher training and learning resources."
+      logo={aiecLogo}
+      logoAlt="Africa International Education Centre"
+      logoOnWhite={false}
+      logoClassName="h-10 w-auto sm:h-12"
+      photo={aiecPhoto}
+      photoAlt="Cambridge, Oxford and Collins textbooks on an AIEC bookshelf"
+      cta={
+        <a
+          href={AIEC_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-7 inline-flex h-11 w-fit cursor-pointer items-center justify-center rounded-full bg-[#A11C24] px-7 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+        >
+          Shop textbooks
+        </a>
+      }
+    />
+  );
+}
+
+function CimasPartnershipSlide() {
+  return (
+    <PartnershipSlide
+      brand="Cimas"
+      accent="#277FC2"
+      accent2="#7EC8E3"
+      panel="#0B3B5C"
+      headline="Family medical aid, from a name Zimbabwe trusts."
+      body="Kleva has partnered with Cimas Health Group so families can compare medical aid packages and get cover for school-age children, from Secure USD plans to Healthguard."
+      logo={cimasLogo}
+      logoAlt="Cimas Health Group"
+      logoClassName="h-12 w-auto sm:h-14"
+      photo={cimasPhoto}
+      photoAlt="A Cimas Secure Private medical aid membership card"
+      cta={
+        <a
+          href={CIMAS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-7 inline-flex h-11 w-fit cursor-pointer items-center justify-center rounded-full bg-[#277FC2] px-7 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+        >
+          View Cimas packages
+        </a>
+      }
+    />
+  );
+}
+
+function PartnershipSlide({
+  brand,
+  accent,
+  accent2,
+  panel,
+  headline,
+  body,
+  logo,
+  logoAlt,
+  logoOnWhite = true,
+  logoClassName = "h-10 w-auto sm:h-12",
+  photo,
+  photoAlt,
+  photoPosition = "center",
+  cutout = false,
+  cta,
+}: {
+  brand: string;
+  accent: string;
+  accent2: string;
+  panel: string;
+  headline: string;
+  body: string;
+  logo: string;
+  logoAlt: string;
+  logoOnWhite?: boolean;
+  logoClassName?: string;
+  photo: string;
+  photoAlt: string;
+  photoPosition?: string;
+  cutout?: boolean;
+  cta: ReactNode;
+}) {
+  return (
+    <section className="isolate flex h-full min-h-[320px] w-full flex-col overflow-hidden bg-white text-[#1A1A1A] md:min-h-[380px]">
+      <div className="grid h-full min-h-[320px] flex-1 md:min-h-[380px] md:grid-cols-[1fr_1fr]">
+        <div className="flex flex-col justify-center px-7 py-8 sm:px-10 sm:py-10 lg:px-12">
+          <span
+            className="inline-flex w-fit items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-widest"
+            style={{
+              color: accent,
+              borderColor: `${accent}33`,
+              backgroundColor: `${accent}1A`,
+            }}
+          >
+            <BadgeCheck className="h-3.5 w-3.5" />
+            Exclusive partnership [DEMO]
+          </span>
+
+          <div className="mt-6 flex items-center gap-3">
+            <img src={klevaMark} alt="" draggable={false} className="h-8 w-8" />
+            <p className="text-sm font-semibold tracking-tight">
+              Kleva <span className="mx-1" style={{ color: accent }}>×</span> {brand}
+            </p>
+          </div>
+
+          <h2 className="mt-4 max-w-md text-[1.85rem] font-bold leading-[1.12] tracking-tight sm:text-[2.15rem] lg:text-[2.35rem]">
+            {headline}
+          </h2>
+
+          <p className="mt-4 max-w-md text-sm leading-relaxed text-neutral-500 sm:text-[15px]">
+            {body}
+          </p>
+
+          {cta}
+        </div>
+
+        <div
+          className="relative isolate h-full min-h-[260px] overflow-hidden md:min-h-full"
+          style={{ backgroundColor: cutout ? "#FFFFFF" : panel }}
+        >
+          <img
+            src={photo}
+            alt={photoAlt}
+            draggable={false}
+            className={cn(
+              "pointer-events-none absolute inset-0 h-full w-full",
+              cutout ? "object-cover object-[center_18%]" : "object-cover",
+            )}
+            style={cutout ? undefined : { objectPosition: photoPosition }}
+          />
+
+          {!cutout ? (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+              <div
+                className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent md:w-10"
+                aria-hidden
+              />
+            </>
+          ) : null}
+
+          <svg
+            className="pointer-events-none absolute inset-0 z-[1] h-full w-full"
+            viewBox="0 0 480 420"
+            preserveAspectRatio="xMaxYMax slice"
+            aria-hidden
+          >
+            <polygon points="480,70 480,420 210,420" fill={accent} opacity={cutout ? 1 : 0.88} />
+            <polygon points="480,230 480,420 265,420" fill={accent2} opacity={cutout ? 1 : 0.92} />
+          </svg>
+
+          <div
+            className={cn(
+              "absolute bottom-5 left-5 z-[2] rounded-2xl px-4 py-3 shadow-lg ring-1",
+              logoOnWhite ? "bg-white/95 ring-black/5 backdrop-blur-sm" : "bg-black/45 ring-white/15 backdrop-blur-sm",
+            )}
+          >
+            <img src={logo} alt={logoAlt} draggable={false} className={logoClassName} />
+          </div>
+        </div>
       </div>
     </section>
   );

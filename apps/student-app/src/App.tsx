@@ -32,6 +32,7 @@ import FinanceApplications from "./pages/finance/FinanceApplications";
 import FinanceReceipt from "./pages/finance/FinanceReceipt";
 import FinanceSchool from "./pages/finance/FinanceSchool";
 import FinanceSupplier from "./pages/finance/FinanceSupplier";
+import { ZikimallBanner } from "./components/ZikimallBanner";
 
 const queryClient = new QueryClient();
 
@@ -94,6 +95,16 @@ const App = () => (
             <BrowserRouter>
               <Routes>
                 <Route path="/auth" element={<Auth />} />
+                <Route
+                  path="/__banner-preview"
+                  element={
+                    <div className="min-h-screen bg-neutral-100 p-6">
+                      <div className="mx-auto max-w-6xl">
+                        <ZikimallBanner />
+                      </div>
+                    </div>
+                  }
+                />
                 <Route path="/invite/:token" element={<Invite />} />
                 <Route path="/" element={<StudentPortalPage><Dashboard /></StudentPortalPage>} />
                 <Route path="/courses" element={<StudentPortalPage><Courses /></StudentPortalPage>} />

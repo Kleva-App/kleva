@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth.js";
 import { db } from "../lib/db.js";
-import { asProfile, getParentChildren } from "../lib/access.js";
+import { asProfile, getParentChildren, publicRoles } from "../lib/access.js";
 import { schoolById } from "../lib/schools.js";
 
 export const meRouter = Router();
@@ -55,7 +55,7 @@ meRouter.get("/me", requireAuth, async (req: AuthenticatedRequest, res) => {
             image: row.image,
           })
         : asProfile(req.user!),
-      roles,
+      roles: publicRoles(roles),
       preferences: normalizePreferences(row?.preferences),
       children,
       parentProfile,

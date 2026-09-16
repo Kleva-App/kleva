@@ -33,10 +33,10 @@ export function ProfileMenu({ className }: ProfileMenuProps) {
   const { toast } = useToast();
   const { user, signOut } = useAuth();
   const [signOutOpen, setSignOutOpen] = useState(false);
-  const { data: me, isParent, isInstitution } = useMe();
+  const { data: me, isParent, isOrganization } = useMe();
 
   const name = me?.profile?.full_name || user?.name || "Student";
-  const roleLabel = isInstitution ? "Institution" : isParent ? "Parent" : "Student";
+  const roleLabel = isOrganization ? "Organization" : isParent ? "Parent" : "Student";
   const email = me?.profile?.email || user?.email || "";
   const initial = name.charAt(0).toUpperCase();
 
