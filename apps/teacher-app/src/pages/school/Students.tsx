@@ -65,7 +65,7 @@ export default function SchoolStudents() {
                   className={cn(
                     "rounded-full px-3.5 py-1.5 text-sm transition-colors",
                     form === f
-                      ? "bg-white text-black font-semibold"
+                      ? "bg-primary text-primary-foreground font-semibold"
                       : "bg-background text-muted-foreground hover:text-foreground border border-border/60",
                   )}
                 >

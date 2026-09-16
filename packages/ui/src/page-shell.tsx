@@ -8,16 +8,22 @@ export const pageContentClass =
 export const pageBarClass =
   "mx-auto flex w-full min-w-0 max-w-7xl px-5 sm:px-6 md:px-8";
 
+export const pageFlushClass =
+  "flex h-full min-h-0 w-full max-w-none flex-col space-y-0 p-0";
+
 export type PageShellProps = React.HTMLAttributes<HTMLDivElement> & {
-  /** `content` = main page column; `bar` = header/footer alignment strip. */
-  variant?: "content" | "bar";
+  /** `content` = main page column; `bar` = header/footer alignment strip; `flush` = full-bleed (inbox). */
+  variant?: "content" | "bar" | "flush";
 };
 
 export const PageShell = React.forwardRef<HTMLDivElement, PageShellProps>(
   ({ className, variant = "content", ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(variant === "bar" ? pageBarClass : pageContentClass, className)}
+      className={cn(
+        variant === "bar" ? pageBarClass : variant === "flush" ? pageFlushClass : pageContentClass,
+        className,
+      )}
       {...props}
     />
   ),

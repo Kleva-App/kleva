@@ -71,7 +71,7 @@ export function ProfileMenu({
               variant === "sidebar" &&
                 "flex w-full items-center gap-3 px-3 py-3 rounded-2xl bg-muted/60 hover:bg-muted transition-colors text-left",
               variant === "chip" &&
-                "hidden sm:flex items-center gap-3 rounded-full bg-card border border-border/70 px-2 py-1.5 shadow-sm hover:bg-accent/40 transition-colors",
+                "flex items-center gap-3 rounded-full bg-card border border-border/70 px-2 py-1.5 shadow-sm hover:bg-accent/40 transition-colors",
               variant === "avatar" &&
                 "h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold shadow-sm hover:opacity-90 transition-opacity",
               className,

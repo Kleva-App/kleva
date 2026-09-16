@@ -1,0 +1,130 @@
+@layer base {
+  :root {
+    /* Learner mark: purple #6B3EF0, teal #2DD4C0, orange #F07818, pink #E090F0 */
+    --brand-purple: 255 86% 59%;
+    --brand-teal: 173 66% 50%;
+    --brand-orange: 27 87% 52%;
+    --brand-pink: 290 68% 48%;
+
+    --background: 40 38% 96%;
+    --foreground: 250 16% 8%;
+
+    --card: 40 50% 99%;
+    --card-foreground: 250 16% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 250 16% 8%;
+
+    --primary: 255 86% 59%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 40 28% 93%;
+    --secondary-foreground: 250 16% 8%;
+
+    --muted: 40 22% 93%;
+    --muted-foreground: 250 8% 40%;
+
+    --accent: 255 76% 95%;
+    --accent-foreground: 255 50% 28%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 173 72% 32%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 27 87% 45%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 40 22% 86%;
+    --input: 40 22% 93%;
+    --ring: 255 86% 59%;
+
+    --hover: 255 76% 96%;
+    --radius: 0.875rem;
+
+    --gradient-primary: linear-gradient(90deg, hsl(255 86% 59%), hsl(173 66% 50%));
+    --gradient-success: linear-gradient(135deg, hsl(173 72% 32%), hsl(173 66% 50%));
+    --gradient-card: linear-gradient(180deg, hsl(40 50% 99%), hsl(40 38% 97%));
+
+    --shadow-sm: 0 1px 2px rgb(20 18 26 / 0.04);
+    --shadow-md: 0 4px 16px rgb(107 62 240 / 0.08);
+    --shadow-lg: 0 12px 32px rgb(107 62 240 / 0.1);
+    --shadow-card: 0 1px 2px rgb(20 18 26 / 0.04), 0 4px 16px rgb(107 62 240 / 0.05);
+    --shadow-elevated: 0 8px 24px rgb(107 62 240 / 0.1);
+    --shadow-glow: 0 0 24px hsl(255 86% 59% / 0.18);
+
+    --sidebar-background: 40 50% 99%;
+    --sidebar-foreground: 250 10% 28%;
+    --sidebar-primary: 255 86% 59%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 255 76% 95%;
+    --sidebar-accent-foreground: 255 50% 28%;
+    --sidebar-border: 40 22% 90%;
+    --sidebar-ring: 255 86% 59%;
+
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --brand-purple: 255 86% 68%;
+    --brand-teal: 173 66% 52%;
+    --brand-orange: 27 90% 58%;
+    --brand-pink: 290 70% 72%;
+
+    --background: 250 16% 8%;
+    --foreground: 40 30% 96%;
+
+    --card: 250 14% 11%;
+    --card-foreground: 40 30% 96%;
+
+    --popover: 250 14% 11%;
+    --popover-foreground: 40 30% 96%;
+
+    --primary: 255 86% 68%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 250 12% 16%;
+    --secondary-foreground: 40 30% 96%;
+
+    --muted: 250 12% 15%;
+    --muted-foreground: 250 8% 68%;
+
+    --accent: 255 40% 18%;
+    --accent-foreground: 255 86% 85%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 173 60% 42%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 27 90% 56%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 250 12% 18%;
+    --input: 250 12% 15%;
+    --ring: 255 86% 68%;
+    --hover: 255 30% 16%;
+
+    --gradient-primary: linear-gradient(90deg, hsl(255 86% 68%), hsl(173 66% 52%));
+    --gradient-success: linear-gradient(135deg, hsl(173 60% 42%), hsl(173 66% 52%));
+    --gradient-card: linear-gradient(180deg, hsl(250 14% 12%), hsl(250 14% 10%));
+
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
+    --shadow-md: 0 4px 16px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.5);
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.25);
+    --shadow-elevated: 0 8px 24px rgb(0 0 0 / 0.45);
+    --shadow-glow: 0 0 24px hsl(255 86% 68% / 0.28);
+
+    --sidebar-background: 250 14% 10%;
+    --sidebar-foreground: 40 14% 82%;
+    --sidebar-primary: 255 86% 68%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 255 30% 16%;
+    --sidebar-accent-foreground: 255 86% 85%;
+    --sidebar-border: 250 12% 16%;
+    --sidebar-ring: 255 86% 68%;
+  }
+}

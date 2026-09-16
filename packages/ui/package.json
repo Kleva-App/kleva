@@ -62,7 +62,10 @@
     "./page-header": "./src/page-header.tsx",
     "./surface-card": "./src/surface-card.tsx",
     "./data-table": "./src/data-table.tsx",
-    "./stat-card": "./src/stat-card.tsx"
+    "./stat-card": "./src/stat-card.tsx",
+    "./app-nav": "./src/app-nav.tsx",
+    "./inbox-view": "./src/inbox-view.tsx",
+    "./theme.css": "./src/theme.css"
   },
   "scripts": {
     "lint": "echo 'no lint configured'",

@@ -70,7 +70,7 @@ export default function SchoolAttendancePage() {
               className={cn(
                 "rounded-full px-3.5 py-1.5 text-sm transition-colors",
                 form === f.form
-                  ? "bg-white text-black font-semibold"
+                  ? "bg-primary text-primary-foreground font-semibold"
                   : "bg-card text-muted-foreground border border-border/60",
               )}
             >

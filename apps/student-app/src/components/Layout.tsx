@@ -7,6 +7,8 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { ProfileMenu } from "@/components/ProfileMenu";
 import { useFamily } from "@/contexts/FamilyContext";
 import { PageShell } from "@nudle/ui/page-shell";
+import { useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,6 +16,8 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const { isParent, isOrganization } = useFamily();
+  const location = useLocation();
+  const isInbox = location.pathname === "/inbox";
 
   return (
     <SidebarProvider
@@ -52,8 +56,15 @@ export function Layout({ children }: LayoutProps) {
               </div>
             </PageShell>
           </header>
-          <main className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-x-none touch-pan-y">
-            <PageShell>{children}</PageShell>
+          <main
+            className={cn(
+              "min-h-0 min-w-0 flex-1",
+              isInbox
+                ? "flex flex-col overflow-hidden"
+                : "overflow-y-auto overflow-x-hidden overscroll-x-none touch-pan-y",
+            )}
+          >
+            {isInbox ? children : <PageShell>{children}</PageShell>}
           </main>
         </div>
       </div>

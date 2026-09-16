@@ -101,7 +101,7 @@ const App = () => (
                 <Route path="/calendar" element={<StudentPortalPage><Calendar /></StudentPortalPage>} />
                 <Route path="/subjects" element={<StudentPortalPage><Subjects /></StudentPortalPage>} />
                 <Route path="/report-card" element={<StudentPortalPage><ReportCard /></StudentPortalPage>} />
-                <Route path="/inbox" element={<StudentPortalPage><Inbox /></StudentPortalPage>} />
+                <Route path="/inbox" element={<AppPage><Inbox /></AppPage>} />
                 <Route path="/insights" element={<StudentPortalPage><Insights /></StudentPortalPage>} />
                 <Route path="/notices" element={<AppPage><Notices /></AppPage>} />
                 <Route path="/account" element={<AppPage><Account /></AppPage>} />
