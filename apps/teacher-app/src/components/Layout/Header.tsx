@@ -1,4 +1,4 @@
-import { Search, Bell, Bot, Menu, ChevronDown } from "lucide-react";
+import { Search, Bell, Bot, Menu } from "lucide-react";
 import { Input } from "@nudle/ui/input";
 import { Button } from "@nudle/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@nudle/ui/popover";
@@ -10,12 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@nudle/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@nudle/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ProfileMenu } from "@/components/Layout/ProfileMenu";
 import { useMe } from "@/hooks/useTeacherData";
@@ -84,23 +78,6 @@ export const Header = ({
                 ))}
               </SelectContent>
             </Select>
-          )}
-
-          {isSchoolAdmin && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-10 gap-1.5 hidden md:flex">
-                  Administrator portal
-                  <ChevronDown className="h-3.5 w-3.5 opacity-60" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="rounded-xl w-52">
-                <DropdownMenuItem className="rounded-lg">Administrator portal</DropdownMenuItem>
-                <DropdownMenuItem className="rounded-lg" disabled>
-                  Teacher portal
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           )}
 
           <Popover>

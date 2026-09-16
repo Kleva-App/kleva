@@ -193,27 +193,38 @@ export const Sidebar = ({
             </div>
           )}
 
-          {isSchoolAdmin &&
-            adminGroups.map((group) => (
-              <div key={group.title} className="space-y-1">
-                {showLabels ? (
-                  <p className="px-3.5 pt-1 pb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                    {group.title}
-                  </p>
-                ) : (
-                  <div className="mx-2 my-1 border-t border-sidebar-border" />
-                )}
-                {group.items.map((item) => (
-                  <NavItem
-                    key={item.path}
-                    item={item}
-                    onMobileClose={onMobileClose}
-                    adminStyle
-                    showLabels={showLabels}
-                  />
-                ))}
+          {isSchoolAdmin && (
+            <>
+              <div className="space-y-1">
+                <NavItem
+                  item={{ icon: LayoutDashboard, label: "Dashboard", path: "/school" }}
+                  onMobileClose={onMobileClose}
+                  adminStyle
+                  showLabels={showLabels}
+                />
               </div>
-            ))}
+              {adminGroups.map((group) => (
+                <div key={group.title} className="space-y-1">
+                  {showLabels ? (
+                    <p className="px-3.5 pt-1 pb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      {group.title}
+                    </p>
+                  ) : (
+                    <div className="mx-2 my-1 border-t border-sidebar-border" />
+                  )}
+                  {group.items.map((item) => (
+                    <NavItem
+                      key={item.path}
+                      item={item}
+                      onMobileClose={onMobileClose}
+                      adminStyle
+                      showLabels={showLabels}
+                    />
+                  ))}
+                </div>
+              ))}
+            </>
+          )}
         </nav>
 
         <div

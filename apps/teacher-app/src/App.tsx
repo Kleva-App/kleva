@@ -25,6 +25,7 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import Hub from "./pages/Hub";
 import SchoolStaff from "./pages/school/Staff";
+import SchoolDashboard from "./pages/school/Dashboard";
 import SchoolStudents from "./pages/school/Students";
 import StaffDetailPage from "./pages/school/StaffDetail";
 import StudentDetailPage from "./pages/school/StudentDetail";
@@ -94,7 +95,7 @@ function AppShell() {
                 <Route path="/analytics" element={<Analytics />} />
                 <Route path="/settings" element={<Settings />} />
 
-                <Route path="/school" element={<Navigate to="/school/staff" replace />} />
+                <Route path="/school" element={<AdminOnly><SchoolDashboard /></AdminOnly>} />
                 <Route path="/school/staff" element={<AdminOnly><SchoolStaff /></AdminOnly>} />
                 <Route path="/school/staff/:staffId" element={<AdminOnly><StaffDetailPage /></AdminOnly>} />
                 <Route path="/school/students" element={<AdminOnly><SchoolStudents /></AdminOnly>} />

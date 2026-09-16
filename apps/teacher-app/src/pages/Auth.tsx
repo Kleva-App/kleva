@@ -9,6 +9,11 @@ import { useToast } from "@nudle/ui/use-toast";
 import { cn } from "@/lib/utils";
 import klevaMark from "@/assets/kleva-mark.svg";
 
+const STAFF_ROLES: Array<{ id: StaffRole; label: string }> = [
+  { id: "teacher", label: "Teacher" },
+  { id: "school_admin", label: "School Admin" },
+];
+
 export default function Auth() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
@@ -30,7 +35,7 @@ export default function Auth() {
         try {
           const me = await api.get<{ roles: string[] }>("/api/me");
           if (me.roles.includes("school_admin") && !me.roles.includes("teacher")) {
-            navigate("/school/staff");
+            navigate("/school");
             return;
           }
         } catch {
@@ -40,7 +45,7 @@ export default function Auth() {
       } else {
         const { error } = await signUp(email, password, fullName, role);
         if (error) throw error;
-        navigate(role === "school_admin" ? "/school/staff" : "/");
+        navigate(role === "school_admin" ? "/school" : "/");
       }
     } catch (err) {
       toast({
@@ -65,50 +70,43 @@ export default function Auth() {
             {mode === "signin" ? "Sign in" : "Create account"}
           </h1>
           <p className="page-subtitle mt-1">
-            {mode === "signup" && role === "school_admin"
+            {role === "school_admin"
               ? "Manage schools, staff, and school health"
               : "Access courses, grading, and attendance"}
           </p>
         </div>
         <form onSubmit={onSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label>Account type</Label>
+            <div className="grid grid-cols-2 gap-2">
+              {STAFF_ROLES.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => setRole(option.id)}
+                  className={cn(
+                    "rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors",
+                    role === option.id
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border bg-card hover:bg-muted/60",
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
           {mode === "signup" && (
-            <>
-              <div className="space-y-2">
-                <Label>Account type</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  {(
-                    [
-                      { id: "teacher", label: "Teacher" },
-                      { id: "school_admin", label: "School Admin" },
-                    ] as const
-                  ).map((option) => (
-                    <button
-                      key={option.id}
-                      type="button"
-                      onClick={() => setRole(option.id)}
-                      className={cn(
-                        "rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors",
-                        role === option.id
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border bg-card hover:bg-muted/60",
-                      )}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="name">Full name</Label>
-                <Input
-                  id="name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                  className="rounded-xl"
-                />
-              </div>
-            </>
+            <div className="space-y-2">
+              <Label htmlFor="name">Full name</Label>
+              <Input
+                id="name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                className="rounded-xl"
+              />
+            </div>
           )}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
