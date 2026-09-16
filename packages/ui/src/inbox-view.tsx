@@ -42,7 +42,7 @@ import {
 import { useToast } from "./use-toast";
 import { cn } from "./lib/utils";
 
-type Section = "all" | "staff" | "parents" | "announcements" | "dms";
+type Section = "all" | "staff" | "parents" | "announcements" | "teachers" | "classmates" | "dms";
 type ThreadTab = "messages" | "files";
 
 export type InboxApi = {
@@ -69,7 +69,7 @@ export type InboxSeedThread = {
   time: string;
   subject: string;
   tags: string[];
-  section: "staff" | "parents" | "announcements";
+  section: "staff" | "parents" | "announcements" | "teachers" | "classmates";
 };
 
 type LiveConversation = {
@@ -113,6 +113,8 @@ type InboxThread = {
 const SECTION_LABEL: Record<Section, string> = {
   all: "All messages",
   staff: "Staff",
+  teachers: "Teachers",
+  classmates: "Classmates",
   parents: "Parents",
   announcements: "Announcements",
   dms: "Direct messages",
