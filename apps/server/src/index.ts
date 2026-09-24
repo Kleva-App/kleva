@@ -21,6 +21,7 @@ import { invitationsRouter } from "./routes/invitations.js";
 import { emailPreviewRouter } from "./routes/email-preview.js";
 import { financeRouter } from "./routes/finance.js";
 import { schoolAdminRouter } from "./routes/school-admin.js";
+import { siteAccessRouter } from "./routes/site-access.js";
 
 const app = express();
 const port = Number(getOptionalEnv("PORT", "3001"));
@@ -43,6 +44,7 @@ app.all("/api/auth/*", toNodeHandler(auth));
 app.use(express.json());
 
 app.use("/api", healthRouter);
+app.use("/api", siteAccessRouter);
 app.use("/api", demoRequestsRouter);
 app.use("/api", meRouter);
 app.use("/api", profilesRouter);

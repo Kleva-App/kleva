@@ -65,6 +65,7 @@
     "./stat-card": "./src/stat-card.tsx",
     "./app-nav": "./src/app-nav.tsx",
     "./inbox-view": "./src/inbox-view.tsx",
+    "./site-gate": "./src/site-gate.tsx",
     "./theme.css": "./src/theme.css"
   },
   "scripts": {

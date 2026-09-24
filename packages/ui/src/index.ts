@@ -56,3 +56,4 @@ export * from "./data-table";
 export * from "./stat-card";
 export * from "./app-nav";
 export * from "./inbox-view";
+export * from "./site-gate";
